@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ModMetaData>
+	<name>LordKuper.Common</name>
+	<author>LordKuper</author>
+	<packageId>LordKuper.Common</packageId>
+	<supportedVersions>
+		<li>1.6</li>
+	</supportedVersions>
+	<description>Shared code library for all LordKuper's RimWorld mods.</description>
+</ModMetaData>
