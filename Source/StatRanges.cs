@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using RimWorld;
 using Verse;
 
@@ -8,7 +7,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Provides functionality for tracking and normalizing stat values using dynamic ranges.
     /// </summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static class StatRanges
     {
         /// <summary>

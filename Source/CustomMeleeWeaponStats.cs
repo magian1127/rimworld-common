@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using RimWorld;
 
@@ -9,7 +8,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Enumerates the custom melee weapon stats available for use.
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum CustomMeleeWeaponStat
     {
         /// <summary>
@@ -36,8 +34,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Provides helper methods and properties for custom melee weapon stats.
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static class CustomMeleeWeaponStats
     {
         /// <summary>

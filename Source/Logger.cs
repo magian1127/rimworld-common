@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Verse;
 
 namespace LordKuper.Common
@@ -8,7 +7,6 @@ namespace LordKuper.Common
     ///     Provides logging utilities for error, warning, and informational messages,
     ///     with support for mod identification and exception details.
     /// </summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static class Logger
     {
         /// <summary>

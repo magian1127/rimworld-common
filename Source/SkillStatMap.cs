@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
@@ -11,9 +9,6 @@ namespace LordKuper.Common
     ///     Provides a mapping between <see cref="SkillDef" /> and the set of <see cref="StatDef" />s
     ///     that are affected by skill need factors and offsets.
     /// </summary>
-    [UsedImplicitly]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static class SkillStatMap
     {
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using RimWorld;
 using Verse;
 
@@ -8,8 +7,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Represents a point in RimWorld time, including year, day, and hour.
     /// </summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public readonly struct RimWorldTime : IEquatable<RimWorldTime>, IComparable<RimWorldTime>, IComparable
     {
         /// <summary>

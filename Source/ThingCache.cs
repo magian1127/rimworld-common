@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
@@ -11,10 +10,6 @@ namespace LordKuper.Common
     ///     Provides a cache for storing stat values of a <see cref="Thing" /> and manages cache updates based on a timer.
     /// </summary>
     [UsedImplicitly]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "CollectionNeverUpdated.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     public class ThingCache
     {
         /// <summary>

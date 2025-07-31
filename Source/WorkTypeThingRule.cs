@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
@@ -12,14 +11,39 @@ namespace LordKuper.Common
     ///     Represents a rule that associates a work type with a set of stat weights for evaluating things.
     /// </summary>
     [UsedImplicitly]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class WorkTypeThingRule : IExposable
     {
+        /// <summary>
+        ///     Stores all relevant <see cref="ThingDef" /> objects for evaluation.
+        /// </summary>
+        private static HashSet<ThingDef> _allRelevantThings;
+
+        /// <summary>
+        ///     Indicates whether the rule has been initialized.
+        /// </summary>
         private bool _isInitialized;
+
+        /// <summary>
+        ///     Stores the stat weights associated with this rule, keyed by stat definition name.
+        /// </summary>
         private Dictionary<string, StatWeight> _statWeights = new Dictionary<string, StatWeight>();
+
+        /// <summary>
+        ///     The <see cref="WorkTypeDef" /> associated with this rule.
+        /// </summary>
         private WorkTypeDef _workTypeDef;
+
+        /// <summary>
+        ///     The name of the work type definition associated with this rule.
+        /// </summary>
         private string _workTypeDefName;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="WorkTypeThingRule" /> class.
+        /// </summary>
+        public WorkTypeThingRule()
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="WorkTypeThingRule" /> class with the specified work type definition
@@ -32,8 +56,24 @@ namespace LordKuper.Common
         }
 
         /// <summary>
+        ///     Gets all relevant <see cref="ThingDef" /> objects for evaluation.
+        /// </summary>
+        private static IEnumerable<ThingDef> AllRelevantThings
+        {
+            get
+            {
+                if (_allRelevantThings == null || _allRelevantThings.Count == 0)
+                    _allRelevantThings = new HashSet<ThingDef>(DefDatabase<ThingDef>.AllDefs.Where(def =>
+                        def.IsWeapon && !def.destroyOnDrop &&
+                        (def.statBases != null || def.equippedStatOffsets != null)));
+                return _allRelevantThings;
+            }
+        }
+
+        /// <summary>
         ///     Gets the default rules for all work types defined in <see cref="WorkTypeStatMap.DefaultStatsMap" />.
         /// </summary>
+        [UsedImplicitly]
         public static IEnumerable<WorkTypeThingRule> DefaultRules
         {
             get
@@ -43,7 +83,7 @@ namespace LordKuper.Common
                 {
                     var rule = new WorkTypeThingRule(map.Key.defName);
                     foreach (var statWeight in map.Value.Values)
-                        rule.SetStatWeight(statWeight.StatDef, statWeight.Weight);
+                        rule.SetStatWeight(statWeight.StatDef, statWeight.Weight, statWeight.Protected);
                     rules.Add(rule);
                 }
                 return rules;
@@ -97,6 +137,47 @@ namespace LordKuper.Common
         }
 
         /// <summary>
+        ///     Removes the <see cref="StatWeight" /> associated with the specified stat definition name from this rule.
+        /// </summary>
+        /// <param name="statDefName">The name of the stat definition to remove.</param>
+        public void DeleteStatWeight(string statDefName)
+        {
+            _ = _statWeights.Remove(statDefName);
+        }
+
+        /// <summary>
+        ///     Gets all globally available <see cref="ThingDef" /> items relevant to this rule, sorted by score.
+        /// </summary>
+        /// <returns>
+        ///     An enumerable list of <see cref="ThingDef" /> objects sorted descending by their calculated score.
+        /// </returns>
+        [UsedImplicitly]
+        public IEnumerable<ThingDef> GetGloballyAvailableItems()
+        {
+            var items = new List<ThingDef>();
+            items.AddRange(AllRelevantThings.Where(def =>
+                (def.statBases ?? new List<StatModifier>()).Union(def.equippedStatOffsets ?? new List<StatModifier>())
+                .Any(sm => _statWeights.ContainsKey(sm.stat.defName))));
+            items.SortByDescending(GetThingDefScore);
+            return items;
+        }
+
+        /// <summary>
+        ///     Calculates a score for the specified <see cref="ThingDef" /> based on the stat weights of this rule.
+        /// </summary>
+        /// <param name="def">The <see cref="ThingDef" /> to score.</param>
+        /// <returns>The calculated score.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="def" /> is null.</exception>
+        private float GetThingDefScore([NotNull] ThingDef def)
+        {
+            return def == null
+                ? throw new ArgumentNullException(nameof(def))
+                : StatWeights.Where(statWeight => statWeight.StatDef != null).Sum(statWeight =>
+                    StatRanges.NormalizeStatValue(statWeight.StatDef,
+                        StatHelper.GetStatValueDeviation(def, statWeight.StatDef)) * statWeight.Weight);
+        }
+
+        /// <summary>
         ///     Calculates a normalized [-1..1] score for the specified <see cref="Thing" /> based on the stat weights of this
         ///     rule.
         /// </summary>
@@ -127,12 +208,16 @@ namespace LordKuper.Common
         }
 
         /// <summary>
-        ///     Sets the weight for a specific stat in this rule.
+        ///     Sets the weight and optional protection status for the specified stat definition.
         /// </summary>
-        /// <param name="statDef">The stat definition.</param>
-        /// <param name="weight">The weight to assign.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="statDef" /> is null.</exception>
-        public void SetStatWeight([NotNull] StatDef statDef, float weight)
+        /// <param name="statDef">The stat definition for which the weight is being set. Cannot be <see langword="null" />.</param>
+        /// <param name="weight">The weight value to assign to the stat definition.</param>
+        /// <param name="isProtected">
+        ///     An optional value indicating whether the stat definition is protected.  If <see langword="null" />, the
+        ///     protection status remains unchanged.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="statDef" /> is <see langword="null" />.</exception>
+        public void SetStatWeight([NotNull] StatDef statDef, float weight, bool? isProtected = null)
         {
             if (statDef == null) throw new ArgumentNullException(nameof(statDef));
             if (!_statWeights.TryGetValue(statDef.defName, out var statWeight))
@@ -141,6 +226,8 @@ namespace LordKuper.Common
                 _statWeights.Add(statDef.defName, statWeight);
             }
             statWeight.Weight = weight;
+            if (isProtected != null)
+                statWeight.Protected = isProtected.Value;
         }
     }
 }

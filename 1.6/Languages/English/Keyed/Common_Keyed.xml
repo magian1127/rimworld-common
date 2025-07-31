@@ -39,4 +39,12 @@
 	<LordKuper.Common.Stats.LK_Tools_WorkType.Description>Item stats that affect performance according to work type rules</LordKuper.Common.Stats.LK_Tools_WorkType.Description>
 	<LordKuper.Common.Stats.LK_Tools_TechLevel.Label>Tech level</LordKuper.Common.Stats.LK_Tools_TechLevel.Label>
 	<LordKuper.Common.Stats.LK_Tools_TechLevel.Description>Tool's tech level</LordKuper.Common.Stats.LK_Tools_TechLevel.Description>
+	<LordKuper.Common.Actions.Add>Add</LordKuper.Common.Actions.Add>
+	<LordKuper.Common.Actions.Refresh>Refresh</LordKuper.Common.Actions.Refresh>
+	<LordKuper.Common.WorkTypeThingRuleWidget.SelectWorkType>Select work type</LordKuper.Common.WorkTypeThingRuleWidget.SelectWorkType>
+	<LordKuper.Common.WorkTypeThingRuleWidget.NoRuleSelected>Select work type using the button above.</LordKuper.Common.WorkTypeThingRuleWidget.NoRuleSelected>
+	<LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsLabel>Stat weights</LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsLabel>
+	<LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsTooltip>The weights of stats used to calculate the score of a particular thing.\nA higher stat weight means that a thing with a higher value for that stat will have more score points.</LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsTooltip>
+	<LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsLabel>Available items</LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsLabel>
+	<LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsTooltip>An enumeration of items that have at least one of the stats listed above, sorted in score descending order.</LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsTooltip>
 </LanguageData>

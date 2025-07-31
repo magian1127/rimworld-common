@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 
 namespace LordKuper.Common
@@ -8,8 +6,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Represents a weighted stat definition, with optional protection and serialization support.
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [UsedImplicitly]
     public class StatWeight : IExposable
     {
         /// <summary>
@@ -18,7 +14,7 @@ namespace LordKuper.Common
         public const float WeightCap = 2f;
 
         private bool _isInitialized;
-        private bool _protected;
+        private bool _isProtected;
         private StatDef _statDef;
         private string _statDefName;
 
@@ -66,7 +62,7 @@ namespace LordKuper.Common
         public StatWeight(string statDefName, bool isProtected)
         {
             _statDefName = statDefName;
-            _protected = isProtected;
+            _isProtected = isProtected;
         }
 
         /// <summary>
@@ -82,9 +78,13 @@ namespace LordKuper.Common
         }
 
         /// <summary>
-        ///     Gets a value indicating whether this stat is protected.
+        ///     Gets or sets a value indicating whether this stat is protected.
         /// </summary>
-        public bool Protected => _protected;
+        public bool Protected
+        {
+            get => _isProtected;
+            set => _isProtected = value;
+        }
 
         /// <summary>
         ///     Gets the <see cref="StatDef" /> associated with this instance.
@@ -109,7 +109,7 @@ namespace LordKuper.Common
         public void ExposeData()
         {
             Scribe_Values.Look(ref _statDefName, nameof(StatDefName));
-            Scribe_Values.Look(ref _protected, nameof(Protected));
+            Scribe_Values.Look(ref _isProtected, nameof(Protected));
             Scribe_Values.Look(ref Weight, nameof(Weight));
         }
 

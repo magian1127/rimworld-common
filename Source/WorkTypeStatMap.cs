@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
@@ -12,8 +11,6 @@ namespace LordKuper.Common
     ///     Used to determine which stats are important for each work type in the game.
     /// </summary>
     [UsedImplicitly]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public class WorkTypeStatMap
     {
         /// <summary>
@@ -105,22 +102,22 @@ namespace LordKuper.Common
             {
                 var statWeights = new Dictionary<StatDef, StatWeight>();
                 _defaultStatsMap.Add(workType, statWeights);
-                var requiredStats = new HashSet<StatDef>();
-                _autoSwitchStatsMap.Add(workType, requiredStats);
+                var autoSwitchStats = new HashSet<StatDef>();
+                _autoSwitchStatsMap.Add(workType, autoSwitchStats);
 
                 // Add default stat weights for this work type
                 if (DefaultWorkTypeStats.TryGetValue(workType.defName, out var defaultStatWeights))
                     foreach (var kvp in defaultStatWeights)
                     {
                         var statDef = DefDatabase<StatDef>.GetNamedSilentFail(kvp.Key);
-                        if (statDef != null) statWeights[statDef] = new StatWeight(statDef, kvp.Value, false);
+                        if (statDef != null) statWeights[statDef] = new StatWeight(statDef, kvp.Value, true);
                     }
 
                 // Add stats from relevant skills
                 foreach (var statDef in workType.relevantSkills.Where(skill => SkillStatMap.Map.ContainsKey(skill))
                              .Select(skill => SkillStatMap.Map[skill]).SelectMany(stats => stats))
                 {
-                    requiredStats.Add(statDef);
+                    autoSwitchStats.Add(statDef);
                     if (!statWeights.ContainsKey(statDef))
                         statWeights.Add(statDef, new StatWeight(statDef, 1f, true));
                 }
@@ -130,20 +127,20 @@ namespace LordKuper.Common
                              recipeDef.requiredGiverWorkType == workType))
                 {
                     if (recipe.efficiencyStat != null && !statWeights.ContainsKey(recipe.efficiencyStat))
-                        statWeights.Add(recipe.efficiencyStat, new StatWeight(recipe.efficiencyStat, 0.8f, false));
+                        statWeights.Add(recipe.efficiencyStat, new StatWeight(recipe.efficiencyStat, 0.8f, true));
                     if (recipe.workSpeedStat != null)
                     {
-                        requiredStats.Add(recipe.workSpeedStat);
+                        autoSwitchStats.Add(recipe.workSpeedStat);
                         if (!statWeights.ContainsKey(recipe.workSpeedStat))
                             statWeights.Add(recipe.workSpeedStat, new StatWeight(recipe.workSpeedStat, 0.5f, true));
                     }
                     if (recipe.workTableEfficiencyStat != null &&
                         !statWeights.ContainsKey(recipe.workTableEfficiencyStat))
                         statWeights.Add(recipe.workTableEfficiencyStat,
-                            new StatWeight(recipe.workTableEfficiencyStat, 0.8f, false));
+                            new StatWeight(recipe.workTableEfficiencyStat, 0.8f, true));
                     if (recipe.workTableSpeedStat != null && !statWeights.ContainsKey(recipe.workTableSpeedStat))
                         statWeights.Add(recipe.workTableSpeedStat,
-                            new StatWeight(recipe.workTableSpeedStat, 0.5f, false));
+                            new StatWeight(recipe.workTableSpeedStat, 0.5f, true));
                 }
 #if DEBUG
                 Logger.LogMessage(

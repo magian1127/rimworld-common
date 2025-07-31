@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
@@ -13,8 +12,6 @@ namespace LordKuper.Common
     ///     Provides helper methods and properties for working with StatDefs and stat values.
     /// </summary>
     [UsedImplicitly]
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class StatHelper
     {
         /// <summary>

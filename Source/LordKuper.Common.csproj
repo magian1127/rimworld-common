@@ -51,6 +51,14 @@
       <HintPath>..\..\..\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\..\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\..\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonMod.cs" />
@@ -66,8 +74,20 @@
     <Compile Include="SkillStatMap.cs" />
     <Compile Include="StatHelper.cs" />
     <Compile Include="StatWeight.cs" />
+    <Compile Include="UI\ActionButton.cs" />
+    <Compile Include="UI\Buttons.cs" />
+    <Compile Include="UI\Icons.cs" />
+    <Compile Include="UI\Layout.cs" />
+    <Compile Include="UI\ScrollView.cs" />
+    <Compile Include="UI\Tabs.cs" />
+    <Compile Include="UI\Fields.cs" />
+    <Compile Include="UI\Labels.cs" />
+    <Compile Include="UI\ThingIconBox.cs" />
+    <Compile Include="UI\Widgets\WorkTypeThingRuleWidget.cs" />
+    <Compile Include="UI\Windows.cs" />
     <Compile Include="WorkTypeThingRule.cs" />
     <Compile Include="WorkTypeStatMap.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

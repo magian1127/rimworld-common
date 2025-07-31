@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using RimWorld;
 
@@ -9,7 +8,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Enumeration of custom tool statistics.
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum CustomToolStat
     {
         /// <summary>
@@ -26,8 +24,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Provides utilities for working with custom tool statistics.
     /// </summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class CustomToolStats
     {
         /// <summary>

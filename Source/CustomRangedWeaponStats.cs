@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using RimWorld;
 
@@ -9,7 +8,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Enumerates all custom ranged weapon statistics.
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum CustomRangedWeaponStat
     {
         /// <summary>
@@ -81,8 +79,6 @@ namespace LordKuper.Common
     /// <summary>
     ///     Provides utilities for working with custom ranged weapon statistics.
     /// </summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class CustomRangedWeaponStats
     {
         /// <summary>
