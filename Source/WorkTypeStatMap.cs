@@ -1,157 +1,143 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using LordKuper.Common.Helpers;
 using RimWorld;
 using Verse;
 
-namespace LordKuper.Common
+namespace LordKuper.Common;
+
+/// <summary>
+///     Provides a mapping between <see cref="WorkTypeDef" /> and relevant <see cref="StatDef" />s with associated weights.
+///     Used to determine which stats are important for each work type in the game.
+/// </summary>
+[UsedImplicitly]
+public class WorkTypeStatMap
 {
     /// <summary>
-    ///     Provides a mapping between <see cref="WorkTypeDef" /> and relevant <see cref="StatDef" />s with associated weights.
-    ///     Used to determine which stats are important for each work type in the game.
+    ///     Stores a mapping from <see cref="WorkTypeDef" /> to a set of <see cref="StatDef" />s that are used for
+    ///     auto-switching.
     /// </summary>
-    [UsedImplicitly]
-    public class WorkTypeStatMap
+    private static Dictionary<WorkTypeDef, HashSet<StatDef>> _autoSwitchStatsMap;
+
+    /// <summary>
+    ///     Stores a mapping from <see cref="WorkTypeDef" /> to a dictionary of <see cref="StatDef" /> and their associated
+    ///     <see cref="StatWeight" />.
+    /// </summary>
+    private static Dictionary<WorkTypeDef, Dictionary<StatDef, StatWeight>> _defaultStatsMap;
+
+    /// <summary>
+    ///     Default stat weights for specific work types, keyed by work type defName and stat defName.
+    /// </summary>
+    private static readonly Dictionary<string, Dictionary<string, float>> DefaultWorkTypeStats = new()
     {
-        /// <summary>
-        ///     Internal cache for the mapping between <see cref="WorkTypeDef" /> and the set of <see cref="StatDef" />s
-        ///     required for auto-switching logic.
-        /// </summary>
-        private static Dictionary<WorkTypeDef, HashSet<StatDef>> _autoSwitchStatsMap;
-
-        /// <summary>
-        ///     Internal cache for the mapping between <see cref="WorkTypeDef" /> and their relevant <see cref="StatDef" />s
-        ///     with weights.
-        /// </summary>
-        private static Dictionary<WorkTypeDef, Dictionary<StatDef, StatWeight>> _defaultStatsMap;
-
-        /// <summary>
-        ///     Default stat weights for specific work types, keyed by work type defName and stat defName.
-        /// </summary>
-        private static readonly Dictionary<string, Dictionary<string, float>> DefaultWorkTypeStats =
-            new Dictionary<string, Dictionary<string, float>>
-            {
-                {
-                    "Cooking", new Dictionary<string, float>
-                    {
-                        { "FoodPoisonChance", 2f }, { "DrugCookingSpeed", 1f }, { "ButcheryFleshSpeed", 1f },
-                        { "ButcheryFleshEfficiency", 1.5f }, { "CookSpeed", 1f }
-                    }
-                },
-                { "Hunting", new Dictionary<string, float> { { "HuntingStealth", 2f } } },
-                {
-                    "Doctor",
-                    new Dictionary<string, float> { { "MedicalTendQualityOffset", 2f }, { "MedicalPotency", 2f } }
-                }
-            };
-
-        /// <summary>
-        ///     Gets the mapping between <see cref="WorkTypeDef" /> and the set of <see cref="StatDef" />s that are required for
-        ///     auto-switching logic.
-        ///     The map is built on first access. If the map is not yet built, it will be constructed by calling
-        ///     <see cref="BuildMap" />.
-        /// </summary>
-        public static Dictionary<WorkTypeDef, HashSet<StatDef>> AutoSwitchStatsMap
         {
-            get
+            "Cooking", new Dictionary<string, float>
             {
-                if (_autoSwitchStatsMap == null) BuildMap();
-                return _autoSwitchStatsMap;
+                { "FoodPoisonChance", 2f }, { "DrugCookingSpeed", 1f }, { "ButcheryFleshSpeed", 1f },
+                { "ButcheryFleshEfficiency", 1.5f }, { "CookSpeed", 1f }
             }
-        }
+        },
+        { "Hunting", new Dictionary<string, float> { { "HuntingStealth", 2f } } },
+        { "Doctor", new Dictionary<string, float> { { "MedicalTendQualityOffset", 2f }, { "MedicalPotency", 2f } } }
+    };
 
-        /// <summary>
-        ///     Gets the mapping between <see cref="WorkTypeDef" /> and their relevant <see cref="StatDef" />s with weights.
-        ///     The map is built on first access. If the map is not yet built, it will be constructed by calling
-        ///     <see cref="BuildMap" />.
-        /// </summary>
-        public static Dictionary<WorkTypeDef, Dictionary<StatDef, StatWeight>> DefaultStatsMap
+    /// <summary>
+    ///     Gets a mapping from <see cref="WorkTypeDef" /> to a set of <see cref="StatDef" />s used for auto-switching.
+    ///     The map is built on first access if not already initialized.
+    /// </summary>
+    [CanBeNull]
+    [UsedImplicitly]
+    public static Dictionary<WorkTypeDef, HashSet<StatDef>> AutoSwitchStatsMap
+    {
+        get
         {
-            get
+            if (_autoSwitchStatsMap == null) BuildMap();
+            return _autoSwitchStatsMap;
+        }
+    }
+
+    /// <summary>
+    ///     Gets a mapping from <see cref="WorkTypeDef" /> to a dictionary of <see cref="StatDef" /> and their associated
+    ///     <see cref="StatWeight" />.
+    ///     The map is built on first access if not already initialized.
+    /// </summary>
+    [CanBeNull]
+    internal static Dictionary<WorkTypeDef, Dictionary<StatDef, StatWeight>> DefaultStatsMap
+    {
+        get
+        {
+            if (_defaultStatsMap == null) BuildMap();
+            return _defaultStatsMap;
+        }
+    }
+
+    /// <summary>
+    ///     Builds the mapping between work types and their relevant stats, including default weights,
+    ///     skill-based stats, and recipe-based stats.
+    /// </summary>
+    private static void BuildMap()
+    {
+        var workTypes = WorkTypeDefsUtility.WorkTypeDefsInPriorityOrder.ToList();
+        var allRecipes = DefDatabase<RecipeDef>.AllDefsListForReading;
+        var workTypeStatDefs = StatHelper.GetStatsByCategory(StatCategory.Work);
+        _defaultStatsMap = new Dictionary<WorkTypeDef, Dictionary<StatDef, StatWeight>>(workTypes.Count);
+        _autoSwitchStatsMap = new Dictionary<WorkTypeDef, HashSet<StatDef>>(workTypes.Count);
+        foreach (var workType in workTypes)
+        {
+            var statWeights = new Dictionary<StatDef, StatWeight>();
+            var autoSwitchStats = new HashSet<StatDef>();
+            _defaultStatsMap.Add(workType, statWeights);
+            _autoSwitchStatsMap.Add(workType, autoSwitchStats);
+            if (DefaultWorkTypeStats.TryGetValue(workType.defName, out var defaultStatWeights))
+                foreach (var kvp in defaultStatWeights)
+                {
+                    var statDef = DefDatabase<StatDef>.GetNamedSilentFail(kvp.Key);
+                    if (statDef != null)
+                        statWeights[statDef] = new StatWeight(statDef, kvp.Value, true);
+                }
+            var skillStatMap = SkillStatMap.Map;
+            var relevantSkills = workType.relevantSkills;
+            if (relevantSkills != null && skillStatMap != null)
+                foreach (var skill in relevantSkills)
+                {
+                    if (!skillStatMap.TryGetValue(skill, out var stats)) continue;
+                    foreach (var statDef in stats)
+                    {
+                        autoSwitchStats.Add(statDef);
+                        if (!statWeights.ContainsKey(statDef))
+                            statWeights.Add(statDef, new StatWeight(statDef, 1f, true));
+                    }
+                }
+            foreach (var recipe in allRecipes)
             {
-                if (_defaultStatsMap == null) BuildMap();
-                return _defaultStatsMap;
+                if (recipe.requiredGiverWorkType != workType) continue;
+                var effStat = recipe.efficiencyStat;
+                var speedStat = recipe.workSpeedStat;
+                var tableEffStat = recipe.workTableEfficiencyStat;
+                var tableSpeedStat = recipe.workTableSpeedStat;
+                if (effStat != null && !statWeights.ContainsKey(effStat))
+                    statWeights.Add(effStat, new StatWeight(effStat, 0.8f, true));
+                if (speedStat != null)
+                {
+                    autoSwitchStats.Add(speedStat);
+                    if (!statWeights.ContainsKey(speedStat))
+                        statWeights.Add(speedStat, new StatWeight(speedStat, 0.5f, true));
+                }
+                if (tableEffStat != null && !statWeights.ContainsKey(tableEffStat))
+                    statWeights.Add(tableEffStat, new StatWeight(tableEffStat, 0.8f, true));
+                if (tableSpeedStat != null && !statWeights.ContainsKey(tableSpeedStat))
+                    statWeights.Add(tableSpeedStat, new StatWeight(tableSpeedStat, 0.5f, true));
             }
-        }
-
-        /// <summary>
-        ///     Builds the mapping between work types and their relevant stats, including default weights,
-        ///     skill-based stats, and recipe-based stats.
-        ///     This method is called on first access to the <see cref="DefaultStatsMap" /> property.
-        ///     It populates the internal <see cref="_defaultStatsMap" /> dictionary with stat weights for each
-        ///     <see cref="WorkTypeDef" />.
-        ///     The process includes:
-        ///     <list type="number">
-        ///         <item>Adding default stat weights from <see cref="DefaultWorkTypeStats" />.</item>
-        ///         <item>Adding stats from relevant skills using <see cref="SkillStatMap" />.</item>
-        ///         <item>Adding stats from recipes associated with the work type.</item>
-        ///         <item>
-        ///             Removing stats not considered relevant for work types (filtered by
-        ///             <see cref="StatHelper.WorkTypeStatDefs" />).
-        ///         </item>
-        ///     </list>
-        /// </summary>
-        private static void BuildMap()
-        {
-#if DEBUG
-            Logger.LogMessage($"Building {nameof(WorkTypeStatMap)}...");
-#endif
-            _defaultStatsMap = new Dictionary<WorkTypeDef, Dictionary<StatDef, StatWeight>>();
-            _autoSwitchStatsMap = new Dictionary<WorkTypeDef, HashSet<StatDef>>();
-            foreach (var workType in WorkTypeDefsUtility.WorkTypeDefsInPriorityOrder)
+            var toRemove = new List<StatDef>();
+            foreach (var def in statWeights.Keys)
             {
-                var statWeights = new Dictionary<StatDef, StatWeight>();
-                _defaultStatsMap.Add(workType, statWeights);
-                var autoSwitchStats = new HashSet<StatDef>();
-                _autoSwitchStatsMap.Add(workType, autoSwitchStats);
-
-                // Add default stat weights for this work type
-                if (DefaultWorkTypeStats.TryGetValue(workType.defName, out var defaultStatWeights))
-                    foreach (var kvp in defaultStatWeights)
-                    {
-                        var statDef = DefDatabase<StatDef>.GetNamedSilentFail(kvp.Key);
-                        if (statDef != null) statWeights[statDef] = new StatWeight(statDef, kvp.Value, true);
-                    }
-
-                // Add stats from relevant skills
-                foreach (var statDef in workType.relevantSkills.Where(skill => SkillStatMap.Map.ContainsKey(skill))
-                             .Select(skill => SkillStatMap.Map[skill]).SelectMany(stats => stats))
-                {
-                    autoSwitchStats.Add(statDef);
-                    if (!statWeights.ContainsKey(statDef))
-                        statWeights.Add(statDef, new StatWeight(statDef, 1f, true));
-                }
-
-                // Add stats from recipes associated with this work type
-                foreach (var recipe in DefDatabase<RecipeDef>.AllDefs.Where(recipeDef =>
-                             recipeDef.requiredGiverWorkType == workType))
-                {
-                    if (recipe.efficiencyStat != null && !statWeights.ContainsKey(recipe.efficiencyStat))
-                        statWeights.Add(recipe.efficiencyStat, new StatWeight(recipe.efficiencyStat, 0.8f, true));
-                    if (recipe.workSpeedStat != null)
-                    {
-                        autoSwitchStats.Add(recipe.workSpeedStat);
-                        if (!statWeights.ContainsKey(recipe.workSpeedStat))
-                            statWeights.Add(recipe.workSpeedStat, new StatWeight(recipe.workSpeedStat, 0.5f, true));
-                    }
-                    if (recipe.workTableEfficiencyStat != null &&
-                        !statWeights.ContainsKey(recipe.workTableEfficiencyStat))
-                        statWeights.Add(recipe.workTableEfficiencyStat,
-                            new StatWeight(recipe.workTableEfficiencyStat, 0.8f, true));
-                    if (recipe.workTableSpeedStat != null && !statWeights.ContainsKey(recipe.workTableSpeedStat))
-                        statWeights.Add(recipe.workTableSpeedStat,
-                            new StatWeight(recipe.workTableSpeedStat, 0.5f, true));
-                }
-#if DEBUG
-                Logger.LogMessage(
-                    $"Stats for {workType.defName} before clearing: {string.Join(", ", statWeights.Select(kvp => kvp.Value.Protected ? $"*{kvp.Key.defName}" : kvp.Key.defName))}");
-#endif
-                // Remove stats that are not considered relevant for work types
-                statWeights.RemoveAll(sw => !StatHelper.WorkTypeStatDefs.Contains(sw.Key));
-#if DEBUG
-                Logger.LogMessage(
-                    $"Stats for {workType.defName} after clearing: {string.Join(", ", statWeights.Select(kvp => kvp.Value.Protected ? $"*{kvp.Key.defName}" : kvp.Key.defName))}");
-#endif
+                if (!workTypeStatDefs.Contains(def))
+                    toRemove.Add(def);
+            }
+            foreach (var def in toRemove)
+            {
+                statWeights.Remove(def);
             }
         }
     }

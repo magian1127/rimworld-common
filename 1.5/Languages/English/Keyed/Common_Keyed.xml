@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<LanguageData>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_ArmorPenetration.Label>Average armor penetration</LordKuper.Common.Stats.LK_MeleeWeapons_ArmorPenetration.Label>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_ArmorPenetration.Description>The average amount of armor weapon will ignore each time it hits the target</LordKuper.Common.Stats.LK_MeleeWeapons_ArmorPenetration.Description>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_DpsSharp.Label>DPS (Sharp)</LordKuper.Common.Stats.LK_MeleeWeapons_DpsSharp.Label>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_DpsSharp.Description>Average sharp damage per second</LordKuper.Common.Stats.LK_MeleeWeapons_DpsSharp.Description>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_DpsBlunt.Label>DPS (Blunt)</LordKuper.Common.Stats.LK_MeleeWeapons_DpsBlunt.Label>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_DpsBlunt.Description>Average blunt damage per second</LordKuper.Common.Stats.LK_MeleeWeapons_DpsBlunt.Description>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_TechLevel.Label>Tech level</LordKuper.Common.Stats.LK_MeleeWeapons_TechLevel.Label>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_TechLevel.Description>Weapon's tech level</LordKuper.Common.Stats.LK_MeleeWeapons_TechLevel.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Dpsa.Label>Average DPSA</LordKuper.Common.Stats.LK_RangedWeapons_Dpsa.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Dpsa.Description>Average damage per second adjusted for weapon accuracy</LordKuper.Common.Stats.LK_RangedWeapons_Dpsa.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaClose.Label>DPSA (close)</LordKuper.Common.Stats.LK_RangedWeapons_DpsaClose.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaClose.Description>Close range damage per second adjusted for weapon accuracy</LordKuper.Common.Stats.LK_RangedWeapons_DpsaClose.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaShort.Label>DPSA (short)</LordKuper.Common.Stats.LK_RangedWeapons_DpsaShort.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaShort.Description>Short range damage per second adjusted for weapon accuracy</LordKuper.Common.Stats.LK_RangedWeapons_DpsaShort.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaMedium.Label>DPSA (medium)</LordKuper.Common.Stats.LK_RangedWeapons_DpsaMedium.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaMedium.Description>Medium range damage per second adjusted for weapon accuracy</LordKuper.Common.Stats.LK_RangedWeapons_DpsaMedium.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaLong.Label>DPSA (long)</LordKuper.Common.Stats.LK_RangedWeapons_DpsaLong.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaLong.Description>Long range damage per second adjusted for weapon accuracy</LordKuper.Common.Stats.LK_RangedWeapons_DpsaLong.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Damage.Label>Damage</LordKuper.Common.Stats.LK_RangedWeapons_Damage.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Damage.Description>The amount of damage weapon deals in a single hit</LordKuper.Common.Stats.LK_RangedWeapons_Damage.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Range.Label>Range</LordKuper.Common.Stats.LK_RangedWeapons_Range.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Range.Description>The maximum range of a weapon</LordKuper.Common.Stats.LK_RangedWeapons_Range.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Warmup.Label>Warmup</LordKuper.Common.Stats.LK_RangedWeapons_Warmup.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Warmup.Description>How much time passes between when a ranged attack begins aiming and when it fires</LordKuper.Common.Stats.LK_RangedWeapons_Warmup.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_BurstShotCount.Label>Burst shot count</LordKuper.Common.Stats.LK_RangedWeapons_BurstShotCount.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_BurstShotCount.Description>The amount of shots weapon fires in each burst</LordKuper.Common.Stats.LK_RangedWeapons_BurstShotCount.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_TicksBetweenBurstShots.Label>Ticks between burst shots</LordKuper.Common.Stats.LK_RangedWeapons_TicksBetweenBurstShots.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_TicksBetweenBurstShots.Description>How much game ticks passes between burst shots</LordKuper.Common.Stats.LK_RangedWeapons_TicksBetweenBurstShots.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_ArmorPenetration.Label>Average armor penetration</LordKuper.Common.Stats.LK_RangedWeapons_ArmorPenetration.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_ArmorPenetration.Description>The average amount of armor weapon will ignore each time it hits the target</LordKuper.Common.Stats.LK_RangedWeapons_ArmorPenetration.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_StoppingPower.Label>Stopping power</LordKuper.Common.Stats.LK_RangedWeapons_StoppingPower.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_StoppingPower.Description>Hits from a weapon will stagger targets, slowing their movement for several seconds</LordKuper.Common.Stats.LK_RangedWeapons_StoppingPower.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_TechLevel.Label>Tech level</LordKuper.Common.Stats.LK_RangedWeapons_TechLevel.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_TechLevel.Description>Weapon's tech level</LordKuper.Common.Stats.LK_RangedWeapons_TechLevel.Description>
+	<LordKuper.Common.Stats.LK_Tools_WorkType.Label>Work type related stats</LordKuper.Common.Stats.LK_Tools_WorkType.Label>
+	<LordKuper.Common.Stats.LK_Tools_WorkType.Description>Item stats that affect performance according to work type rules</LordKuper.Common.Stats.LK_Tools_WorkType.Description>
+	<LordKuper.Common.Stats.LK_Tools_TechLevel.Label>Tech level</LordKuper.Common.Stats.LK_Tools_TechLevel.Label>
+	<LordKuper.Common.Stats.LK_Tools_TechLevel.Description>Tool's tech level</LordKuper.Common.Stats.LK_Tools_TechLevel.Description>
+	<LordKuper.Common.Actions.Add>Add</LordKuper.Common.Actions.Add>
+	<LordKuper.Common.Actions.Refresh>Refresh</LordKuper.Common.Actions.Refresh>
+	<LordKuper.Common.WorkTypeThingRuleWidget.SelectWorkType>Select work type</LordKuper.Common.WorkTypeThingRuleWidget.SelectWorkType>
+	<LordKuper.Common.WorkTypeThingRuleWidget.NoRuleSelected>Select work type using the button above.</LordKuper.Common.WorkTypeThingRuleWidget.NoRuleSelected>
+	<LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsLabel>Stat weights</LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsLabel>
+	<LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsTooltip>The weights of stats used to calculate the score of a particular thing.\nA higher stat weight means that a thing with a higher value for that stat will have more score points.</LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsTooltip>
+	<LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsLabel>Available items</LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsLabel>
+	<LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsTooltip>An enumeration of items that have at least one of the stats listed above, sorted in score descending order.</LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsTooltip>
+</LanguageData>

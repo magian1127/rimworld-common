@@ -4,81 +4,162 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
-namespace LordKuper.Common.UI
+namespace LordKuper.Common.UI;
+
+/// <summary>
+///     Provides utility methods and constants for rendering input fields in the UI.
+/// </summary>
+[UsedImplicitly]
+public static partial class Fields
 {
     /// <summary>
-    ///     Provides utility methods and constants for rendering input fields in the UI.
+    ///     Draws a set of action buttons within the specified rectangle and outputs the remaining rectangle.
     /// </summary>
-    [UsedImplicitly]
-    public static class Fields
+    /// <param name="rect">The rectangle in which to draw the action buttons.</param>
+    /// <param name="actionButtons">A collection of <see cref="IconButton" />s to display.</param>
+    /// <param name="remRect">Outputs the remaining rectangle after the buttons are drawn.</param>
+    private static void DoFieldActionButtons(Rect rect, [CanBeNull] IReadOnlyCollection<IconButton> actionButtons,
+        out Rect remRect)
     {
-        /// <summary>
-        ///     The height of a float slider field row.
-        /// </summary>
-        private const float FloatSliderHeight = Layout.RowHeight;
-
-        /// <summary>
-        ///     Draws a labeled float slider with optional action buttons.
-        /// </summary>
-        /// <param name="rect">The rectangle in which to draw the field.</param>
-        /// <param name="actionButtons">A collection of action buttons to display next to the label.</param>
-        /// <param name="label">The label text.</param>
-        /// <param name="labelTooltip">The tooltip for the label.</param>
-        /// <param name="value">The float value to be modified by the slider.</param>
-        /// <param name="minValue">The minimum value of the slider.</param>
-        /// <param name="maxValue">The maximum value of the slider.</param>
-        /// <param name="step">The step size for the slider.</param>
-        /// <param name="remRect">The remaining rectangle after drawing the field.</param>
-        /// <returns>The height of the row used for the field.</returns>
-        [UsedImplicitly]
-        public static float DoLabeledFloatSlider(Rect rect, IReadOnlyCollection<ActionButton> actionButtons,
-            string label, string labelTooltip, ref float value, float minValue, float maxValue, float step,
-            out Rect remRect)
+        if (actionButtons == null || actionButtons.Count == 0)
         {
-            var font = Text.Font;
-            var anchor = Text.Anchor;
-            Text.Font = GameFont.Small;
-            var rowRect = Layout.GetTopRowRect(rect, FloatSliderHeight, out remRect).ContractedBy(4f);
-            GetLabeledFieldRects(rowRect, 0.5f, out var labelRect, out var inputRect);
-            if (actionButtons != null && actionButtons.Count > 0)
-            {
-                var buttonsRect = Layout.GetLeftColumnRect(labelRect,
-                    (Buttons.FieldIconButtonSize + Layout.ElementGapSmall) * actionButtons.Count, out labelRect);
-                foreach (var actionButton in actionButtons)
-                {
-                    var buttonRect =
-                        Layout.GetLeftColumnRect(buttonsRect, Buttons.FieldIconButtonSize, out buttonsRect);
-                    Buttons.DoIconButton(buttonRect, actionButton.Icon, actionButton.Action, actionButton.Tooltip,
-                        actionButton.IsEnabled);
-                    Layout.GetLeftColumnRect(buttonsRect, Layout.ElementGapSmall, out buttonsRect);
-                }
-            }
-            if (!string.IsNullOrWhiteSpace(labelTooltip))
-                TooltipHandler.TipRegion(labelRect, labelTooltip);
-            Verse.Widgets.LabelFit(labelRect, label);
-            Verse.Widgets.HorizontalSlider(inputRect, ref value, new FloatRange(minValue, maxValue), $"{value:N2}",
-                step);
-            Text.Font = font;
-            Text.Anchor = anchor;
-            return rowRect.height;
+            remRect = rect;
+            return;
         }
-
-        /// <summary>
-        ///     Splits a row rectangle into label and input rectangles based on the label width factor.
-        /// </summary>
-        /// <param name="rowRect">The full row rectangle.</param>
-        /// <param name="labelWidthFactor">The fraction of the row width to use for the label (between 0.25 and 0.75).</param>
-        /// <param name="labelRect">The output rectangle for the label.</param>
-        /// <param name="inputRect">The output rectangle for the input field.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="labelWidthFactor" /> is outside [0.25..0.75].</exception>
-        private static void GetLabeledFieldRects(Rect rowRect, float labelWidthFactor, out Rect labelRect,
-            out Rect inputRect)
+        var buttonsRect = Layout.GetLeftColumnRect(rect,
+            (Buttons.FieldIconButtonSize + Layout.ElementGapSmall) * actionButtons.Count, out remRect);
+        foreach (var actionButton in actionButtons)
         {
-            if (labelWidthFactor < 0.25f || labelWidthFactor > 0.75f)
-                throw new ArgumentOutOfRangeException(nameof(labelWidthFactor),
-                    "Label width factor must be in [0.25..0.75] range.");
-            labelRect = Layout.GetLeftColumnRect(rowRect, rowRect.width * labelWidthFactor, out inputRect);
-            Layout.GetLeftColumnRect(inputRect, Layout.ElementGap, out inputRect);
+            var buttonRect = Layout.GetLeftColumnRect(buttonsRect, Buttons.FieldIconButtonSize, out buttonsRect);
+            Buttons.DoIconButton(buttonRect, actionButton);
+            Layout.GetLeftColumnRect(buttonsRect, Layout.ElementGapSmall, out buttonsRect);
         }
+    }
+
+    /// <summary>
+    ///     Draws a label within the specified rectangle and attaches a tooltip if provided.
+    /// </summary>
+    /// <param name="rect">The rectangle in which to draw the label.</param>
+    /// <param name="label">The text to display as the label.</param>
+    private static void DoFieldLabel(Rect rect, [NotNull] string label)
+    {
+        if (string.IsNullOrWhiteSpace(label)) throw new ArgumentNullException(nameof(label));
+        var font = Text.Font;
+        var anchor = Text.Anchor;
+        Text.Font = GameFont.Small;
+        Text.Anchor = TextAnchor.MiddleLeft;
+        Verse.Widgets.LabelFit(rect, label);
+        Text.Font = font;
+        Text.Anchor = anchor;
+    }
+
+    /// <summary>
+    ///     Draws a label and optional icon within the specified rectangles, and attaches a tooltip if provided.
+    /// </summary>
+    /// <param name="labelRect">The rectangle in which to draw the label.</param>
+    /// <param name="label">The text to display as the label.</param>
+    /// <param name="iconRect">The rectangle in which to draw the icon.</param>
+    /// <param name="icon">The icon texture to draw, or null for none.</param>
+    private static void DoFieldLabel(Rect labelRect, [NotNull] string label, Rect iconRect, [CanBeNull] Texture icon)
+    {
+        if (string.IsNullOrWhiteSpace(label)) throw new ArgumentNullException(nameof(label));
+        if (icon != null) DoFieldLabelIcon(iconRect, icon);
+        DoFieldLabel(labelRect, label);
+    }
+
+    /// <summary>
+    ///     Draws an icon within the specified rectangle.
+    /// </summary>
+    /// <param name="rect">The rectangle in which to draw the icon.</param>
+    /// <param name="icon">The icon texture to draw.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="icon" /> is null or <paramref name="rect" /> is zero.</exception>
+    private static void DoFieldLabelIcon(Rect rect, [NotNull] Texture icon)
+    {
+        if (icon == null) throw new ArgumentNullException(nameof(icon));
+        if (rect == Rect.zero)
+            throw new ArgumentNullException(nameof(rect), "Icon rectangle must not be zero when an icon is provided.");
+        Verse.Widgets.DrawTextureFitted(rect, icon, 1f);
+    }
+
+    /// <summary>
+    ///     Displays a labeled field with associated action buttons within the specified rectangle.
+    /// </summary>
+    /// <param name="rect">The rectangle within which the field and buttons are displayed.</param>
+    /// <param name="indentationLevel">The level of indentation applied to the field label.</param>
+    /// <param name="actionButtons">A collection of action buttons to display alongside the field label.</param>
+    /// <param name="label">The text to display as the field label.</param>
+    /// <param name="tooltip">The tooltip text to display when hovering over the field label.</param>
+    /// <param name="icon">The icon to display next to the label, or null for none.</param>
+    /// <param name="remRect">The remaining rectangle after the field label and buttons are rendered.</param>
+    private static void DoFieldLabelWithButtons(Rect rect, int indentationLevel,
+        [CanBeNull] IReadOnlyCollection<IconButton> actionButtons, [NotNull] string label, [CanBeNull] string tooltip,
+        [CanBeNull] Texture icon, out Rect remRect)
+    {
+        if (string.IsNullOrWhiteSpace(label)) throw new ArgumentNullException(nameof(label));
+        GetLabeledFieldRects(rect, 0.5f, indentationLevel, icon != null, out var labelRect, out remRect,
+            out var iconRect, out var tooltipRect);
+        DoFieldActionButtons(labelRect, actionButtons, out labelRect);
+        DoFieldLabel(labelRect, label, iconRect, icon);
+        if (!string.IsNullOrWhiteSpace(tooltip))
+            TooltipHandler.TipRegion(tooltipRect, tooltip);
+    }
+
+    /// <summary>
+    ///     Gets the top row rectangle for a field and outputs the remaining rectangle.
+    /// </summary>
+    /// <param name="rect">The rectangle to split.</param>
+    /// <param name="rowHeight">The height of the row to extract.</param>
+    /// <param name="remRect">Outputs the remaining rectangle after extracting the row.</param>
+    /// <returns>The contracted top row rectangle for the field.</returns>
+    private static Rect GetFieldRowRect(Rect rect, float rowHeight, out Rect remRect)
+    {
+        var rowRect = Layout.GetTopRowRect(rect, rowHeight, out remRect);
+        Verse.Widgets.DrawHighlightIfMouseover(rowRect);
+        return rowRect.ContractedBy(Layout.ElementGapTiny);
+    }
+
+    /// <summary>
+    ///     Calculates and returns the rectangular areas for a labeled field within a given row.
+    /// </summary>
+    /// <param name="rowRect">The rectangle representing the row in which the labeled field is located.</param>
+    /// <param name="labelWidthFactor">
+    ///     The proportion of the row's width allocated to the label. Must be in the range
+    ///     [0.25..0.75].
+    /// </param>
+    /// <param name="indentationLevel">The number of indentation levels applied to the label. Must be non-negative.</param>
+    /// <param name="icon">Whether to allocate space for an icon next to the label.</param>
+    /// <param name="labelRect">When the method returns, contains the rectangle allocated for the label.</param>
+    /// <param name="inputRect">When the method returns, contains the rectangle allocated for the input field.</param>
+    /// <param name="iconRect">
+    ///     When the method returns, contains the rectangle allocated for the icon, or
+    ///     <see cref="Rect.zero" /> if <paramref name="icon" /> is false.
+    /// </param>
+    /// <param name="tooltipRect">When the method returns, contains the rectangle allocated for the tooltip region.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown if <paramref name="labelWidthFactor" /> is outside the range [0.25..0.75] or if
+    ///     <paramref name="indentationLevel" /> is negative.
+    /// </exception>
+    private static void GetLabeledFieldRects(Rect rowRect, float labelWidthFactor, int indentationLevel, bool icon,
+        out Rect labelRect, out Rect inputRect, out Rect iconRect, out Rect tooltipRect)
+    {
+        if (labelWidthFactor is < 0.25f or > 0.75f)
+            throw new ArgumentOutOfRangeException(nameof(labelWidthFactor),
+                "Label width factor must be in [0.25..0.75] range.");
+        if (indentationLevel < 0)
+            throw new ArgumentOutOfRangeException(nameof(indentationLevel), "Indentation level must be non-negative.");
+        labelRect = Layout.GetLeftColumnRect(rowRect, rowRect.width * labelWidthFactor, out inputRect);
+        if (indentationLevel > 0)
+            Layout.GetLeftColumnRect(labelRect, indentationLevel * Layout.IndentationSize, out labelRect);
+        tooltipRect = labelRect;
+        if (icon)
+        {
+            iconRect = Layout.GetLeftColumnRect(labelRect, labelRect.height, out labelRect);
+            Layout.GetLeftColumnRect(labelRect, Layout.ElementGapSmall, out labelRect);
+        }
+        else
+        {
+            iconRect = Rect.zero;
+        }
+        Layout.GetLeftColumnRect(inputRect, Layout.ElementGap, out inputRect);
     }
 }
