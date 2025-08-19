@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<LanguageData>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_ArmorPenetration.Label>Пробитие брони</LordKuper.Common.Stats.LK_MeleeWeapons_ArmorPenetration.Label>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_ArmorPenetration.Description>Среднее количество брони, которое оружие игнорирует при каждом попадании по цели</LordKuper.Common.Stats.LK_MeleeWeapons_ArmorPenetration.Description>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_DpsSharp.Label>УВС (режущий)</LordKuper.Common.Stats.LK_MeleeWeapons_DpsSharp.Label>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_DpsSharp.Description>Средний режущий урон в секунду</LordKuper.Common.Stats.LK_MeleeWeapons_DpsSharp.Description>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_DpsBlunt.Label>УВС (тупой)</LordKuper.Common.Stats.LK_MeleeWeapons_DpsBlunt.Label>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_DpsBlunt.Description>Средний тупой урон в секунду</LordKuper.Common.Stats.LK_MeleeWeapons_DpsBlunt.Description>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_TechLevel.Label>Технологический уровень</LordKuper.Common.Stats.LK_MeleeWeapons_TechLevel.Label>
+	<LordKuper.Common.Stats.LK_MeleeWeapons_TechLevel.Description>Технологический уровень оружия</LordKuper.Common.Stats.LK_MeleeWeapons_TechLevel.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Dpsa.Label>СУВСТ</LordKuper.Common.Stats.LK_RangedWeapons_Dpsa.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Dpsa.Description>Средний урон в секунду с учётом точности оружия</LordKuper.Common.Stats.LK_RangedWeapons_Dpsa.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaClose.Label>УВСТ (ближний)</LordKuper.Common.Stats.LK_RangedWeapons_DpsaClose.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaClose.Description>Урон в секунду на ближней дистанции с учётом точности оружия</LordKuper.Common.Stats.LK_RangedWeapons_DpsaClose.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaShort.Label>УВСТ (короткий)</LordKuper.Common.Stats.LK_RangedWeapons_DpsaShort.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaShort.Description>Урон в секунду на короткой дистанции с учётом точности оружия</LordKuper.Common.Stats.LK_RangedWeapons_DpsaShort.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaMedium.Label>УВСТ (средний)</LordKuper.Common.Stats.LK_RangedWeapons_DpsaMedium.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaMedium.Description>Урон в секунду на средней дистанции с учётом точности оружия</LordKuper.Common.Stats.LK_RangedWeapons_DpsaMedium.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaLong.Label>УВСТ (дальний)</LordKuper.Common.Stats.LK_RangedWeapons_DpsaLong.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_DpsaLong.Description>Урон в секунду на дальней дистанции с учётом точности оружия</LordKuper.Common.Stats.LK_RangedWeapons_DpsaLong.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Damage.Label>Урон</LordKuper.Common.Stats.LK_RangedWeapons_Damage.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Damage.Description>Количество урона, наносимое оружием одним попаданием</LordKuper.Common.Stats.LK_RangedWeapons_Damage.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Range.Label>Дальность</LordKuper.Common.Stats.LK_RangedWeapons_Range.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Range.Description>Максимальная дальность оружия</LordKuper.Common.Stats.LK_RangedWeapons_Range.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Warmup.Label>Подготовка</LordKuper.Common.Stats.LK_RangedWeapons_Warmup.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_Warmup.Description>Время от начала прицеливания до выстрела</LordKuper.Common.Stats.LK_RangedWeapons_Warmup.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_BurstShotCount.Label>Количество выстрелов в очереди</LordKuper.Common.Stats.LK_RangedWeapons_BurstShotCount.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_BurstShotCount.Description>Количество выстрелов, которые оружие делает в каждой очереди</LordKuper.Common.Stats.LK_RangedWeapons_BurstShotCount.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_TicksBetweenBurstShots.Label>Тиков между выстрелами в очереди</LordKuper.Common.Stats.LK_RangedWeapons_TicksBetweenBurstShots.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_TicksBetweenBurstShots.Description>Сколько игровых тиков проходит между выстрелами в очереди</LordKuper.Common.Stats.LK_RangedWeapons_TicksBetweenBurstShots.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_ArmorPenetration.Label>Пробитие брони</LordKuper.Common.Stats.LK_RangedWeapons_ArmorPenetration.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_ArmorPenetration.Description>Среднее количество брони, которое оружие игнорирует при каждом попадании по цели</LordKuper.Common.Stats.LK_RangedWeapons_ArmorPenetration.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_StoppingPower.Label>Останавливающее действие</LordKuper.Common.Stats.LK_RangedWeapons_StoppingPower.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_StoppingPower.Description>Попадания из оружия ошеломляют цели, замедляя их передвижение на несколько секунд</LordKuper.Common.Stats.LK_RangedWeapons_StoppingPower.Description>
+	<LordKuper.Common.Stats.LK_RangedWeapons_TechLevel.Label>Технологический уровень</LordKuper.Common.Stats.LK_RangedWeapons_TechLevel.Label>
+	<LordKuper.Common.Stats.LK_RangedWeapons_TechLevel.Description>Технологический уровень оружия</LordKuper.Common.Stats.LK_RangedWeapons_TechLevel.Description>
+	<LordKuper.Common.Stats.LK_Tools_WorkType.Label>Рабочие характеристики</LordKuper.Common.Stats.LK_Tools_WorkType.Label>
+	<LordKuper.Common.Stats.LK_Tools_WorkType.Description>Характеристики предметов, влияющие на эффективность в соответствии с правилами типов работ</LordKuper.Common.Stats.LK_Tools_WorkType.Description>
+	<LordKuper.Common.Stats.LK_Tools_TechLevel.Label>Технологический уровень</LordKuper.Common.Stats.LK_Tools_TechLevel.Label>
+	<LordKuper.Common.Stats.LK_Tools_TechLevel.Description>Технологический уровень инструмента</LordKuper.Common.Stats.LK_Tools_TechLevel.Description>
+	<LordKuper.Common.PawnType.Undefined.Label>Неопределённый</LordKuper.Common.PawnType.Undefined.Label>
+	<LordKuper.Common.PawnType.Colonist.Label>Колонист</LordKuper.Common.PawnType.Colonist.Label>
+	<LordKuper.Common.PawnType.Guest.Label>Гость</LordKuper.Common.PawnType.Guest.Label>
+	<LordKuper.Common.PawnType.Prisoner.Label>Пленник</LordKuper.Common.PawnType.Prisoner.Label>
+	<LordKuper.Common.PawnType.Slave.Label>Раб</LordKuper.Common.PawnType.Slave.Label>
+	<LordKuper.Common.PawnType.Animal.Label>Животное</LordKuper.Common.PawnType.Animal.Label>
+	<LordKuper.Common.PawnHealthState.Healthy.Label>Здоров</LordKuper.Common.PawnHealthState.Healthy.Label>
+	<LordKuper.Common.PawnHealthState.Healthy.Tooltip>Пешки без текущих проблем со здоровьем.</LordKuper.Common.PawnHealthState.Healthy.Tooltip>
+	<LordKuper.Common.PawnHealthState.Resting.Label>Отдыхает</LordKuper.Common.PawnHealthState.Resting.Label>
+	<LordKuper.Common.PawnHealthState.Resting.Tooltip>Пешки, которым нужен постельный отдых для восстановления.</LordKuper.Common.PawnHealthState.Resting.Tooltip>
+	<LordKuper.Common.PawnHealthState.NeedsTending.Label>Нужен уход</LordKuper.Common.PawnHealthState.NeedsTending.Label>
+	<LordKuper.Common.PawnHealthState.NeedsTending.Tooltip>Пешки с травмами или болезнями, требующими медицинского ухода.</LordKuper.Common.PawnHealthState.NeedsTending.Tooltip>
+	<LordKuper.Common.PawnHealthState.Downed.Label>Выведен из строя</LordKuper.Common.PawnHealthState.Downed.Label>
+	<LordKuper.Common.PawnHealthState.Downed.Tooltip>Пешки без сознания и не способны двигаться.</LordKuper.Common.PawnHealthState.Downed.Tooltip>
+	<LordKuper.Common.PawnHealthState.Mental.Label>Психоз</LordKuper.Common.PawnHealthState.Mental.Label>
+	<LordKuper.Common.PawnHealthState.Mental.Tooltip>Пешки в состоянии психического срыва.</LordKuper.Common.PawnHealthState.Mental.Tooltip>
+	<LordKuper.Common.PawnHealthState.Dead.Label>Мёртв</LordKuper.Common.PawnHealthState.Dead.Label>
+	<LordKuper.Common.PawnHealthState.Dead.Tooltip>Мёртвые пешки.</LordKuper.Common.PawnHealthState.Dead.Tooltip>
+	<LordKuper.Common.Passions.LearnRateFactorDescription>Коэффициент обучения: {0:N2}</LordKuper.Common.Passions.LearnRateFactorDescription>
+	<LordKuper.Common.Passions.ForgetRateFactorDescription>Коэффициент забывания: {0:N2}</LordKuper.Common.Passions.ForgetRateFactorDescription>
+	<LordKuper.Common.Actions.Add>Добавить</LordKuper.Common.Actions.Add>
+	<LordKuper.Common.Actions.Edit>Изменить</LordKuper.Common.Actions.Edit>
+	<LordKuper.Common.Actions.Delete>Удалить</LordKuper.Common.Actions.Delete>
+	<LordKuper.Common.Actions.Reset>Сбросить</LordKuper.Common.Actions.Reset>
+	<LordKuper.Common.Actions.Refresh>Обновить</LordKuper.Common.Actions.Refresh>
+	<LordKuper.Common.Actions.Select>Выбрать…</LordKuper.Common.Actions.Select>
+	<LordKuper.Common.WorkTypeThingRuleWidget.NoRuleSelected>Выберите тип работ с помощью кнопки выше.</LordKuper.Common.WorkTypeThingRuleWidget.NoRuleSelected>
+	<LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsLabel>Веса характеристик</LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsLabel>
+	<LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsTooltip>Веса характеристик, используемых для вычисления очков предмета.\nЧем выше вес характеристики, тем больше очков получит предмет с более высоким значением этой характеристики.</LordKuper.Common.WorkTypeThingRuleWidget.StatWeightsTooltip>
+	<LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsLabel>Доступные предметы</LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsLabel>
+	<LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsTooltip>Перечень предметов, у которых есть хотя бы одна из перечисленных выше характеристик, отсортированный по убыванию очков.</LordKuper.Common.WorkTypeThingRuleWidget.AvailableItemsTooltip>
+	<LordKuper.Common.PawnFilter.IgnoreFilter>Игнорируется</LordKuper.Common.PawnFilter.IgnoreFilter>
+	<LordKuper.Common.PawnFilter.UndefinedFilterTooltip>Будут использованы настройки правила по умолчанию.</LordKuper.Common.PawnFilter.UndefinedFilterTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnTypesOnTooltip>Пешки будут фильтроваться по их типам.</LordKuper.Common.PawnFilter.FilterPawnTypesOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnTypesOffTooltip>Типы пешек будут игнорироваться.</LordKuper.Common.PawnFilter.FilterPawnTypesOffTooltip>
+	<LordKuper.Common.PawnFilter.AllowedPawnTypesLabel>Типы пешек</LordKuper.Common.PawnFilter.AllowedPawnTypesLabel>
+	<LordKuper.Common.PawnFilter.AllowedPawnTypesTooltip>Будут выбраны только те пешки, типы которых включены в этом разделе.</LordKuper.Common.PawnFilter.AllowedPawnTypesTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnHealthStatesOnTooltip>Пешки будут фильтроваться по состоянию здоровья.</LordKuper.Common.PawnFilter.FilterPawnHealthStatesOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnHealthStatesOffTooltip>Состояние здоровья пешек будет игнорироваться.</LordKuper.Common.PawnFilter.FilterPawnHealthStatesOffTooltip>
+	<LordKuper.Common.PawnFilter.AllowedPawnHealthStatesLabel>Состояния здоровья пешек</LordKuper.Common.PawnFilter.AllowedPawnHealthStatesLabel>
+	<LordKuper.Common.PawnFilter.AllowedPawnHealthStatesTooltip>Будут выбраны только пешки в состояниях здоровья, включённых в этом разделе.</LordKuper.Common.PawnFilter.AllowedPawnHealthStatesTooltip>
+	<LordKuper.Common.PawnFilter.FilterWorkPassionsOnTooltip>Пешки будут фильтроваться по страсти к типам работ.</LordKuper.Common.PawnFilter.FilterWorkPassionsOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterWorkPassionsOffTooltip>Страсти пешек будут игнорироваться.</LordKuper.Common.PawnFilter.FilterWorkPassionsOffTooltip>
+	<LordKuper.Common.PawnFilter.AllowedWorkPassionsLabel>Страсти к работе</LordKuper.Common.PawnFilter.AllowedWorkPassionsLabel>
+	<LordKuper.Common.PawnFilter.AllowedWorkPassionsTooltip>Будут выбраны только пешки со значениями страсти, включёнными в этом разделе.</LordKuper.Common.PawnFilter.AllowedWorkPassionsTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnTraitsOnTooltip>Пешки будут фильтроваться по их чертам.</LordKuper.Common.PawnFilter.FilterPawnTraitsOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnTraitsOffTooltip>Черты пешек будут игнорироваться.</LordKuper.Common.PawnFilter.FilterPawnTraitsOffTooltip>
+	<LordKuper.Common.PawnFilter.PawnTraitLimitsLabel>Черты пешек</LordKuper.Common.PawnFilter.PawnTraitLimitsLabel>
+	<LordKuper.Common.PawnFilter.PawnTraitLimitsTooltip>Будут выбраны только пешки, у которых есть любые из включённых черт и нет ни одной из отключённых черт. Черты, не добавленные в этом разделе, будут игнорироваться.</LordKuper.Common.PawnFilter.PawnTraitLimitsTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnCapacitiesOnTooltip>Пешки будут фильтроваться по их способностям.</LordKuper.Common.PawnFilter.FilterPawnCapacitiesOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnCapacitiesOffTooltip>Способности пешек будут игнорироваться.</LordKuper.Common.PawnFilter.FilterPawnCapacitiesOffTooltip>
+	<LordKuper.Common.PawnFilter.PawnCapacityLimitsLabel>Способности пешек</LordKuper.Common.PawnFilter.PawnCapacityLimitsLabel>
+	<LordKuper.Common.PawnFilter.PawnCapacityLimitsTooltip>Будут выбраны только те пешки, уровни способностей которых находятся в указанных ниже диапазонах. Способности, не перечисленные в этом разделе, будут игнорироваться.</LordKuper.Common.PawnFilter.PawnCapacityLimitsTooltip>
+	<LordKuper.Common.PawnFilter.FilterWorkCapacitiesOnTooltip>Пешки будут фильтроваться по их возможностям к работе.</LordKuper.Common.PawnFilter.FilterWorkCapacitiesOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterWorkCapacitiesOffTooltip>Возможности к работе пешек будут игнорироваться.</LordKuper.Common.PawnFilter.FilterWorkCapacitiesOffTooltip>
+	<LordKuper.Common.PawnFilter.WorkCapacityLimitsLabel>Возможности к работе пешек</LordKuper.Common.PawnFilter.WorkCapacityLimitsLabel>
+	<LordKuper.Common.PawnFilter.WorkCapacityLimitsTooltip>Будут выбраны только те пешки, которые способны выполнять включённые ниже типы работ и не способны выполнять отключённые ниже типы работ. Способность выполнять типы работ, не перечисленные в этом разделе, будет игнорироваться.</LordKuper.Common.PawnFilter.WorkCapacityLimitsTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnSkillsOnTooltip>Пешки будут фильтроваться по уровням навыков.</LordKuper.Common.PawnFilter.FilterPawnSkillsOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnSkillsOffTooltip>Уровни навыков пешек будут игнорироваться.</LordKuper.Common.PawnFilter.FilterPawnSkillsOffTooltip>
+	<LordKuper.Common.PawnFilter.PawnSkillLimitsLabel>Навыки пешек</LordKuper.Common.PawnFilter.PawnSkillLimitsLabel>
+	<LordKuper.Common.PawnFilter.PawnSkillLimitsTooltip>Будут выбраны только те пешки, уровни навыков которых находятся в указанных ниже диапазонах. Навыки, не перечисленные в этом разделе, будут игнорироваться.</LordKuper.Common.PawnFilter.PawnSkillLimitsTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnStatsOnTooltip>Пешки будут фильтроваться по уровням характеристик.</LordKuper.Common.PawnFilter.FilterPawnStatsOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnStatsOffTooltip>Уровни характеристик пешек будут игнорироваться.</LordKuper.Common.PawnFilter.FilterPawnStatsOffTooltip>
+	<LordKuper.Common.PawnFilter.PawnStatLimitsLabel>Характеристики пешек</LordKuper.Common.PawnFilter.PawnStatLimitsLabel>
+	<LordKuper.Common.PawnFilter.PawnStatLimitsTooltip>Будут выбраны только те пешки, уровни характеристик которых находятся в указанных ниже диапазонах. Характеристики, не перечисленные в этом разделе, будут игнорироваться.</LordKuper.Common.PawnFilter.PawnStatLimitsTooltip>
+</LanguageData>
