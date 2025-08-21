@@ -21,6 +21,11 @@ public class PawnFilter : IExposable
     public HashSet<PawnHealthState> AllowedPawnHealthStates = [];
 
     /// <summary>
+    ///     Defines the set of allowed primary weapon types for pawns.
+    /// </summary>
+    public HashSet<PawnPrimaryWeaponType> AllowedPawnPrimaryWeaponTypes = [];
+
+    /// <summary>
     ///     The set of allowed pawn types for filtering.
     /// </summary>
     public HashSet<PawnType> AllowedPawnTypes = [];
@@ -39,6 +44,11 @@ public class PawnFilter : IExposable
     ///     Whether to filter pawns by their health states.
     /// </summary>
     public bool? FilterPawnHealthStates;
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether to filter pawn primary weapon types.
+    /// </summary>
+    public bool? FilterPawnPrimaryWeaponTypes;
 
     /// <summary>
     ///     Indicates whether to filter pawns by their skills.
@@ -158,7 +168,7 @@ public class PawnFilter : IExposable
     ///     Thrown if either <paramref name="main" /> or <paramref name="fallback" /> is <c>null</c>.
     /// </exception>
     [UsedImplicitly]
-    public static PawnFilter CombineFilters([NotNull] PawnFilter main, [NotNull] PawnFilter fallback)
+    public static PawnFilter Combine([NotNull] PawnFilter main, [NotNull] PawnFilter fallback)
     {
         if (main == null) throw new ArgumentNullException(nameof(main));
         if (fallback == null) throw new ArgumentNullException(nameof(fallback));
@@ -250,8 +260,60 @@ public class PawnFilter : IExposable
             combined.FilterPawnStats = fallback.FilterPawnStats;
             combined.PawnStatLimits = new List<StatLimit>(fallback.PawnStatLimits);
         }
+        if (main.FilterPawnPrimaryWeaponTypes.HasValue)
+        {
+            combined.FilterPawnPrimaryWeaponTypes = main.FilterPawnPrimaryWeaponTypes;
+            combined.AllowedPawnPrimaryWeaponTypes =
+                new HashSet<PawnPrimaryWeaponType>(main.AllowedPawnPrimaryWeaponTypes);
+        }
+        else
+        {
+            combined.FilterPawnPrimaryWeaponTypes = fallback.FilterPawnPrimaryWeaponTypes;
+            combined.AllowedPawnPrimaryWeaponTypes =
+                new HashSet<PawnPrimaryWeaponType>(fallback.AllowedPawnPrimaryWeaponTypes);
+        }
         combined.Validate();
         return combined;
+    }
+
+    /// <summary>
+    ///     Creates a deep copy of the current <see cref="PawnFilter" /> instance.
+    /// </summary>
+    /// <remarks>
+    ///     The returned copy includes deep copies of collections and complex objects, ensuring that
+    ///     changes to the copy do not affect the original instance, and vice versa.
+    /// </remarks>
+    /// <returns>A new <see cref="PawnFilter" /> instance with the same configuration and state as the current instance.</returns>
+    [UsedImplicitly]
+    [NotNull]
+    public PawnFilter Copy()
+    {
+        return new PawnFilter
+        {
+            AllowedPawnHealthStates = [..AllowedPawnHealthStates],
+            AllowedPawnTypes = [..AllowedPawnTypes],
+            AllowedWorkPassions = [..AllowedWorkPassions],
+            FilterPawnCapacities = FilterPawnCapacities,
+            FilterPawnHealthStates = FilterPawnHealthStates,
+            FilterPawnSkills = FilterPawnSkills,
+            FilterPawnStats = FilterPawnStats,
+            FilterPawnTraits = FilterPawnTraits,
+            FilterPawnTypes = FilterPawnTypes,
+            FilterWorkCapacities = FilterWorkCapacities,
+            FilterWorkPassions = FilterWorkPassions,
+            ForbiddenPawnHealthStates = [..ForbiddenPawnHealthStates],
+            ForbiddenPawnTypes = [..ForbiddenPawnTypes],
+            PawnCapacityLimits = PawnCapacityLimits.Select(l => new PawnCapacityLimit(l.Def) { Limit = l.Limit })
+                .ToList(),
+            PawnSkillLimits = PawnSkillLimits.Select(l => new PawnSkillLimit(l.Def) { Limit = l.Limit }).ToList(),
+            PawnStatLimits = PawnStatLimits.Select(l => new StatLimit(l.Def)
+            {
+                Limit = l.Limit, LimitMaxCap = l.LimitMaxCap, LimitMinCap = l.LimitMinCap, ValueStyle = l.ValueStyle
+            }).ToList(),
+            PawnTraitLimits = PawnTraitLimits.Select(l => new PawnTraitLimit(l.Def) { Limit = l.Limit }).ToList(),
+            TriStateMode = TriStateMode,
+            WorkCapacityLimits = new Dictionary<WorkTags, bool>(WorkCapacityLimits)
+        };
     }
 
     /// <summary>
@@ -271,143 +333,11 @@ public class PawnFilter : IExposable
             var allPawns = map.mapPawns.AllPawnsSpawned;
             foreach (var pawn in allPawns)
             {
-                if (pawn == null) continue;
-                var pawnType = GetPawnType(pawn);
-                if (!AllowedPawnTypes.Contains(pawnType)) continue;
-                if (FilterPawnHealthStates == true)
-                {
-                    var healthState = GetPawnHealthState(pawn);
-                    if (!AllowedPawnHealthStates.Contains(healthState)) continue;
-                }
-                if (FilterWorkPassions == true && workType != null)
-                {
-                    var passion = GetWorkPassion(pawn, workType);
-                    if (!AllowedWorkPassions.Contains(passion)) continue;
-                }
-                if (FilterPawnTraits == true && PawnTraitLimits.Count > 0)
-                {
-                    var traits = pawn.story?.traits;
-                    if (traits == null) continue;
-                    bool enabledSatisfied = true, disabledSatisfied = true, hasEnabled = false;
-                    foreach (var limit in PawnTraitLimits)
-                    {
-                        if (limit.Def == null) continue;
-                        if (limit.Limit)
-                        {
-                            if (!hasEnabled)
-                            {
-                                enabledSatisfied = false;
-                                hasEnabled = true;
-                            }
-                            if (!enabledSatisfied && traits.HasTrait(limit.Def))
-                                enabledSatisfied = true;
-                        }
-                        else
-                        {
-                            if (traits.HasTrait(limit.Def))
-                            {
-                                disabledSatisfied = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (!enabledSatisfied || !disabledSatisfied) continue;
-                }
-                if (FilterPawnCapacities == true && PawnCapacityLimits.Count > 0)
-                {
-                    var satisfied = true;
-                    foreach (var limit in PawnCapacityLimits)
-                    {
-                        if (limit.Def == null) continue;
-                        if (!limit.Limit.Includes(pawn.health.capacities.GetLevel(limit.Def)))
-                        {
-                            satisfied = false;
-                            break;
-                        }
-                    }
-                    if (!satisfied) continue;
-                }
-                if (FilterWorkCapacities == true && WorkCapacityLimits.Count > 0)
-                {
-                    var satisfied = true;
-                    foreach (var limit in WorkCapacityLimits)
-                    {
-                        if (pawn.WorkTagIsDisabled(limit.Key) != limit.Value)
-                        {
-                            satisfied = false;
-                            break;
-                        }
-                    }
-                    if (!satisfied) continue;
-                }
-                if (FilterPawnSkills == true && PawnSkillLimits.Count > 0)
-                {
-                    var satisfied = true;
-                    foreach (var limit in PawnSkillLimits)
-                    {
-                        if (limit.Def == null) continue;
-                        var value = pawn.skills.GetSkill(limit.Def).Level;
-                        if (value < limit.Limit.TrueMin || value > limit.Limit.TrueMax)
-                        {
-                            satisfied = false;
-                            break;
-                        }
-                    }
-                    if (!satisfied) continue;
-                }
-                if (FilterPawnStats == true && PawnStatLimits.Count > 0)
-                {
-                    var satisfied = true;
-                    foreach (var limit in PawnStatLimits)
-                    {
-                        if (limit.Def == null) continue;
-                        var statValue = pawn.GetStatValue(limit.Def);
-                        if (statValue < limit.Limit.TrueMin || statValue > limit.Limit.TrueMax)
-                        {
-                            satisfied = false;
-                            break;
-                        }
-                    }
-                    if (!satisfied) continue;
-                }
+                if (!SatisfiesFilter(pawn, workType)) continue;
                 pawns.Add(pawn);
             }
         }
         return pawns;
-    }
-
-    /// <summary>
-    ///     Determines the health state of the specified pawn.
-    /// </summary>
-    /// <param name="pawn">The pawn whose health state is to be determined.</param>
-    /// <returns>The <see cref="PawnHealthState" /> of the pawn.</returns>
-    private static PawnHealthState GetPawnHealthState([NotNull] Pawn pawn)
-    {
-        if (pawn.Dead) return PawnHealthState.Dead;
-        if (pawn.Downed) return PawnHealthState.Downed;
-        if (pawn.InMentalState) return PawnHealthState.Mental;
-        var health = pawn.health;
-        if (health.HasHediffsNeedingTend() || health.hediffSet.HasTendableHediff())
-            return PawnHealthState.NeedsTending;
-        if (HealthAIUtility.ShouldSeekMedicalRest(pawn)) return PawnHealthState.Resting;
-        return PawnHealthState.Healthy;
-    }
-
-    /// <summary>
-    ///     Determines the type of the specified pawn.
-    /// </summary>
-    /// <param name="pawn">The pawn whose type is to be determined.</param>
-    /// <returns>The <see cref="PawnType" /> of the pawn.</returns>
-    private static PawnType GetPawnType([NotNull] Pawn pawn)
-    {
-        if (pawn.IsFreeNonSlaveColonist) return PawnType.Colonist;
-        if (pawn.IsSlaveOfColony) return PawnType.Slave;
-        if (pawn.IsPrisonerOfColony) return PawnType.Prisoner;
-        if (pawn is { IsColonist: true, GuestStatus: GuestStatus.Guest } || pawn.HasExtraHomeFaction() ||
-            pawn.HasExtraMiniFaction())
-            return PawnType.Guest;
-        if (pawn.IsAnimal && pawn.Faction == Faction.OfPlayer) return PawnType.Animal;
-        return PawnType.Undefined;
     }
 
     /// <summary>
@@ -438,7 +368,7 @@ public class PawnFilter : IExposable
                 $"{Resources.Strings.PawnFilter.AllowedPawnTypesLabel}: ".Colorize(ColoredText.ExpectationsColor),
                 indentationLevel);
             stringBuilder.AppendLine(FilterPawnTypes.Value
-                ? string.Join(", ", AllowedPawnTypes.Select(Resources.Strings.PawnType.GetPawnTypeLabel))
+                ? string.Join(", ", AllowedPawnTypes.Select(Resources.Strings.PawnType.GetLabel))
                 : Resources.Strings.PawnFilter.IgnoreFilter);
         }
         if (FilterPawnHealthStates.HasValue)
@@ -448,8 +378,18 @@ public class PawnFilter : IExposable
                 $"{Resources.Strings.PawnFilter.AllowedPawnHealthStatesLabel}: "
                     .Colorize(ColoredText.ExpectationsColor), indentationLevel);
             stringBuilder.AppendLine(FilterPawnHealthStates.Value
+                ? string.Join(", ", AllowedPawnHealthStates.Select(Resources.Strings.PawnHealthState.GetLabel))
+                : Resources.Strings.PawnFilter.IgnoreFilter);
+        }
+        if (FilterPawnPrimaryWeaponTypes.HasValue)
+        {
+            anyValue = true;
+            stringBuilder.AppendIndented(
+                $"{Resources.Strings.PawnFilter.AllowedPawnPrimaryWeaponTypesLabel}: ".Colorize(ColoredText
+                    .ExpectationsColor), indentationLevel);
+            stringBuilder.AppendLine(FilterPawnPrimaryWeaponTypes.Value
                 ? string.Join(", ",
-                    AllowedPawnHealthStates.Select(Resources.Strings.PawnHealthState.GetPawnHealthStateLabel))
+                    AllowedPawnPrimaryWeaponTypes.Select(Resources.Strings.PawnPrimaryWeaponType.GetLabel))
                 : Resources.Strings.PawnFilter.IgnoreFilter);
         }
         if (FilterPawnSkills.HasValue)
@@ -525,16 +465,135 @@ public class PawnFilter : IExposable
     }
 
     /// <summary>
-    ///     Gets the highest work passion for the specified pawn and work type.
+    ///     Determines whether the specified <paramref name="pawn" /> satisfies the defined filters and constraints.
     /// </summary>
-    /// <param name="pawn">The pawn whose work passion is to be determined.</param>
-    /// <param name="workType">The work type to check for passion.</param>
-    /// <returns>The highest <see cref="Passion" /> for the given work type, or <see cref="Passion.None" /> if unavailable.</returns>
-    private static Passion GetWorkPassion([NotNull] Pawn pawn, [NotNull] WorkTypeDef workType)
+    /// <remarks>
+    ///     This method evaluates the <paramref name="pawn" /> against multiple filters, including pawn
+    ///     type, health state, work passions, traits, capacities, skills, and stats. Each filter is applied only if it is
+    ///     enabled and configured. If any filter is not satisfied, the method returns <see langword="false" />. If all
+    ///     applicable filters are satisfied, the method returns <see langword="true" />.
+    /// </remarks>
+    /// <param name="pawn">The pawn to evaluate. Cannot be <see langword="null" />.</param>
+    /// <param name="workType">
+    ///     The work type to consider when filtering by work passions. Can be <see langword="null" /> if work passion
+    ///     filtering is not required.
+    /// </param>
+    /// <returns>
+    ///     <see langword="true" /> if the <paramref name="pawn" /> meets all the specified filters and constraints;
+    ///     otherwise, <see langword="false" />.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="pawn" /> is <see langword="null" />.</exception>
+    [UsedImplicitly]
+    public bool SatisfiesFilter([NotNull] Pawn pawn, [CanBeNull] WorkTypeDef workType)
     {
         if (pawn == null) throw new ArgumentNullException(nameof(pawn));
-        if (workType == null) throw new ArgumentNullException(nameof(workType));
-        return pawn.skills?.MaxPassionOfRelevantSkillsFor(workType) ?? Passion.None;
+        if (FilterPawnTypes == true)
+        {
+            var pawnType = PawnHelper.GetPawnType(pawn);
+            if (!AllowedPawnTypes.Contains(pawnType)) return false;
+        }
+        if (FilterPawnHealthStates == true)
+        {
+            var healthState = PawnHelper.GetPawnHealthState(pawn);
+            if (!AllowedPawnHealthStates.Contains(healthState)) return false;
+        }
+        if (FilterPawnPrimaryWeaponTypes == true)
+        {
+            var weaponType = PawnHelper.GetPrimaryWeaponType(pawn);
+            if (!AllowedPawnPrimaryWeaponTypes.Contains(weaponType)) return false;
+        }
+        if (FilterWorkPassions == true && workType != null)
+        {
+            var passion = PawnHelper.GetWorkPassion(pawn, workType);
+            if (!AllowedWorkPassions.Contains(passion)) return false;
+        }
+        if (FilterPawnTraits == true && PawnTraitLimits.Count > 0)
+        {
+            var traits = pawn.story?.traits;
+            if (traits == null) return false;
+            bool enabledSatisfied = true, disabledSatisfied = true, hasEnabled = false;
+            foreach (var limit in PawnTraitLimits)
+            {
+                if (limit.Def == null) return false;
+                if (limit.Limit)
+                {
+                    if (!hasEnabled)
+                    {
+                        enabledSatisfied = false;
+                        hasEnabled = true;
+                    }
+                    if (!enabledSatisfied && traits.HasTrait(limit.Def))
+                        enabledSatisfied = true;
+                }
+                else
+                {
+                    if (traits.HasTrait(limit.Def))
+                    {
+                        disabledSatisfied = false;
+                        break;
+                    }
+                }
+            }
+            if (!enabledSatisfied || !disabledSatisfied) return false;
+        }
+        if (FilterPawnCapacities == true && PawnCapacityLimits.Count > 0)
+        {
+            var satisfied = true;
+            foreach (var limit in PawnCapacityLimits)
+            {
+                if (limit.Def == null) return false;
+                if (!limit.Limit.Includes(pawn.health.capacities.GetLevel(limit.Def)))
+                {
+                    satisfied = false;
+                    break;
+                }
+            }
+            if (!satisfied) return false;
+        }
+        if (FilterWorkCapacities == true && WorkCapacityLimits.Count > 0)
+        {
+            var satisfied = true;
+            foreach (var limit in WorkCapacityLimits)
+            {
+                if (pawn.WorkTagIsDisabled(limit.Key) != limit.Value)
+                {
+                    satisfied = false;
+                    break;
+                }
+            }
+            if (!satisfied) return false;
+        }
+        if (FilterPawnSkills == true && PawnSkillLimits.Count > 0)
+        {
+            var satisfied = true;
+            foreach (var limit in PawnSkillLimits)
+            {
+                if (limit.Def == null) return false;
+                var value = pawn.skills.GetSkill(limit.Def).Level;
+                if (value < limit.Limit.TrueMin || value > limit.Limit.TrueMax)
+                {
+                    satisfied = false;
+                    break;
+                }
+            }
+            if (!satisfied) return false;
+        }
+        if (FilterPawnStats == true && PawnStatLimits.Count > 0)
+        {
+            var satisfied = true;
+            foreach (var limit in PawnStatLimits)
+            {
+                if (limit.Def == null) return false;
+                var statValue = pawn.GetStatValue(limit.Def);
+                if (statValue < limit.Limit.TrueMin || statValue > limit.Limit.TrueMax)
+                {
+                    satisfied = false;
+                    break;
+                }
+            }
+            if (!satisfied) return false;
+        }
+        return true;
     }
 
     /// <summary>
@@ -558,6 +617,7 @@ public class PawnFilter : IExposable
             FilterPawnStats ??= false;
             FilterPawnTraits ??= false;
             FilterWorkCapacities ??= false;
+            FilterPawnPrimaryWeaponTypes ??= false;
         }
     }
 }

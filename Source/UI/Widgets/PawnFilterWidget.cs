@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using LordKuper.Common.Filters;
 using LordKuper.Common.Filters.Limits;
@@ -8,6 +7,7 @@ using LordKuper.Common.Helpers;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Enumerable = System.Linq.Enumerable;
 using PawnHealthState = LordKuper.Common.Filters.PawnHealthState;
 using Strings = LordKuper.Common.Resources.Strings.PawnFilter;
 
@@ -27,18 +27,26 @@ public static class PawnFilterWidget
     ///     List of all possible pawn health states.
     /// </summary>
     private static readonly List<PawnHealthState> AllPawnHealthStates =
-        Enum.GetValues(typeof(PawnHealthState)).Cast<PawnHealthState>().ToList();
+        Enumerable.ToList(Enumerable.Cast<PawnHealthState>(Enum.GetValues(typeof(PawnHealthState))));
+
+    /// <summary>
+    ///     List of all possible pawn primary weapon types.
+    /// </summary>
+    private static readonly List<PawnPrimaryWeaponType> AllPawnPrimaryWeaponTypes =
+        Enumerable.ToList(Enumerable.Cast<PawnPrimaryWeaponType>(Enum.GetValues(typeof(PawnPrimaryWeaponType))));
 
     /// <summary>
     ///     List of all possible pawn types.
     /// </summary>
-    private static readonly List<PawnType> AllPawnTypes = Enum.GetValues(typeof(PawnType)).Cast<PawnType>().ToList();
+    private static readonly List<PawnType> AllPawnTypes =
+        Enumerable.ToList(Enumerable.Cast<PawnType>(Enum.GetValues(typeof(PawnType))));
 
     /// <summary>
     ///     List of all possible work capacities, excluding None and AllWork.
     /// </summary>
-    private static readonly List<WorkTags> AllWorkCapacities = Enum.GetValues(typeof(WorkTags)).Cast<WorkTags>()
-        .Where(t => t != WorkTags.None && t != WorkTags.AllWork).ToList();
+    private static readonly List<WorkTags> AllWorkCapacities = Enumerable.ToList(
+        Enumerable.Where(Enumerable.Cast<WorkTags>(Enum.GetValues(typeof(WorkTags))),
+            t => t != WorkTags.None && t != WorkTags.AllWork));
 
     /// <summary>
     ///     Renders the Pawn Capacities section within the specified rectangular area and updates the associated filter
@@ -198,6 +206,7 @@ public static class PawnFilterWidget
         var doGapLine = false;
         var doTypes = sections.HasFlag(PawnFilterSections.PawnTypes);
         var doHealthStates = sections.HasFlag(PawnFilterSections.PawnHealthStates);
+        var doWeaponTypes = sections.HasFlag(PawnFilterSections.PawnPrimaryWeaponTypes);
         var doSkills = sections.HasFlag(PawnFilterSections.PawnSkills) && pawnSkillInputId.HasValue;
         var doWorkPassions = sections.HasFlag(PawnFilterSections.WorkPassions);
         var doWorkCapacities = sections.HasFlag(PawnFilterSections.WorkCapacities);
@@ -215,6 +224,12 @@ public static class PawnFilterWidget
                 y += Layout.DoGapLineHorizontal(remRect, out remRect);
             y += DoPawnHealthStatesSection(remRect, pawnFilter, ref filterChanged, out remRect);
             doGapLine = true;
+        }
+        if (doWeaponTypes)
+        {
+            if (doGapLine)
+                y += Layout.DoGapLineHorizontal(remRect, out remRect);
+            y += DoPawnPrimaryWeaponTypesSection(remRect, pawnFilter, ref filterChanged, out remRect);
         }
         if (doSkills)
         {
@@ -327,8 +342,8 @@ public static class PawnFilterWidget
             foreach (var healthState in relevantHealthStates)
             {
                 var selectorRect = rects[i++];
-                var label = Resources.Strings.PawnHealthState.GetPawnHealthStateLabel(healthState);
-                var tooltip = Resources.Strings.PawnHealthState.GetPawnHealthStateTooltip(healthState);
+                var label = Resources.Strings.PawnHealthState.GetLabel(healthState);
+                var tooltip = Resources.Strings.PawnHealthState.GetTooltip(healthState);
                 var value = pawnFilter.AllowedPawnHealthStates.Contains(healthState);
                 var oldValue = value;
                 Fields.DoLabeledCheckbox(selectorRect, 0, null, ref value, label, tooltip, null, out _);
@@ -336,6 +351,80 @@ public static class PawnFilterWidget
                     pawnFilter.AllowedPawnHealthStates.Add(healthState);
                 else
                     pawnFilter.AllowedPawnHealthStates.Remove(healthState);
+                if (oldValue != value) filterChanged = true;
+            }
+        }
+        return y;
+    }
+
+    /// <summary>
+    ///     Renders and processes the section for filtering pawns by their primary weapon types.
+    /// </summary>
+    /// <remarks>
+    ///     This method handles both the header toggle for enabling or disabling the filter and the
+    ///     individual checkboxes for selecting specific weapon types. If the filter is disabled, the section will not
+    ///     render the individual weapon type options.
+    /// </remarks>
+    /// <param name="rect">The rectangular area within which the section is drawn.</param>
+    /// <param name="pawnFilter">
+    ///     The filter object that determines the allowed primary weapon types for pawns. Cannot be
+    ///     <see langword="null" />.
+    /// </param>
+    /// <param name="filterChanged">
+    ///     A reference to a boolean value that will be set to <see langword="true" /> if the filter state changes as a
+    ///     result of user interaction.
+    /// </param>
+    /// <param name="remRect">
+    ///     When the method returns, contains the remaining portion of the <paramref name="rect" /> that was not used by the
+    ///     section.
+    /// </param>
+    /// <returns>The vertical space consumed by the section, in pixels.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="pawnFilter" /> is <see langword="null" />.</exception>
+    private static float DoPawnPrimaryWeaponTypesSection(Rect rect, [NotNull] PawnFilter pawnFilter,
+        ref bool filterChanged, out Rect remRect)
+    {
+        if (pawnFilter == null) throw new ArgumentNullException(nameof(pawnFilter));
+        var y = 0f;
+        bool enabled;
+        if (pawnFilter.TriStateMode)
+        {
+            var oldValue = pawnFilter.FilterPawnPrimaryWeaponTypes;
+            y += Sections.DoToggleableSectionHeader(rect, ref pawnFilter.FilterPawnPrimaryWeaponTypes,
+                Strings.GetFilterPawnPrimaryWeaponTypesTooltip(true), Strings.AllowedPawnPrimaryWeaponTypesLabel,
+                Strings.AllowedPawnPrimaryWeaponTypesTooltip, out remRect);
+            enabled = pawnFilter.FilterPawnPrimaryWeaponTypes == true;
+            if (oldValue != pawnFilter.FilterPawnPrimaryWeaponTypes) filterChanged = true;
+        }
+        else
+        {
+            var oldValue = pawnFilter.FilterPawnPrimaryWeaponTypes;
+            enabled = pawnFilter.FilterPawnPrimaryWeaponTypes == true;
+            y += Sections.DoToggleableSectionHeader(rect, ref enabled,
+                Strings.GetFilterPawnPrimaryWeaponTypesTooltip(false), Strings.AllowedPawnPrimaryWeaponTypesLabel,
+                Strings.AllowedPawnPrimaryWeaponTypesTooltip, out remRect);
+            pawnFilter.FilterPawnPrimaryWeaponTypes = enabled;
+            if (oldValue != pawnFilter.FilterPawnPrimaryWeaponTypes) filterChanged = true;
+        }
+        if (!enabled) return y;
+        var count = AllPawnPrimaryWeaponTypes.Count;
+        if (count != 0)
+        {
+            var rects = Layout.GetGridRects(remRect, DefaultSelectorWidthMin, Layout.ElementGapSmall, Layout.RowHeight,
+                Layout.ElementGapSmall, count, out var gridHeight, out remRect);
+            y += gridHeight;
+            var i = 0;
+            foreach (var weaponType in AllPawnPrimaryWeaponTypes)
+            {
+                var selectorRect = rects[i++];
+                var label = Resources.Strings.PawnPrimaryWeaponType.GetLabel(weaponType);
+                var tooltip = Resources.Strings.PawnPrimaryWeaponType.GetTooltip(weaponType);
+                var value = pawnFilter.AllowedPawnPrimaryWeaponTypes.Contains(weaponType);
+                var oldValue = value;
+                Fields.DoLabeledCheckbox(selectorRect, 0, null, ref value, label, tooltip, null, out _);
+                if (value)
+                    pawnFilter.AllowedPawnPrimaryWeaponTypes.Add(weaponType);
+                else
+                    pawnFilter.AllowedPawnPrimaryWeaponTypes.Remove(weaponType);
                 if (oldValue != value) filterChanged = true;
             }
         }
@@ -753,7 +842,7 @@ public static class PawnFilterWidget
                 {
                     if (pawnFilter.ForbiddenPawnTypes.Contains(pawnType)) continue;
                     var selectorRect = rects[i++];
-                    var label = Resources.Strings.PawnType.GetPawnTypeLabel(pawnType);
+                    var label = Resources.Strings.PawnType.GetLabel(pawnType);
                     var value = allowed.Contains(pawnType);
                     var oldValue = value;
                     Fields.DoLabeledCheckbox(selectorRect, 0, null, ref value, label, null, null, out _);
@@ -823,7 +912,7 @@ public static class PawnFilterWidget
                 Layout.ElementGapSmall, canAdd ? count + 1 : count, out var gridHeight, out remRect);
             y += gridHeight;
             var i = 0;
-            var keys = pawnFilter.WorkCapacityLimits.Keys.ToArray();
+            var keys = Enumerable.ToArray(pawnFilter.WorkCapacityLimits.Keys);
             foreach (var key in keys)
             {
                 var value = pawnFilter.WorkCapacityLimits[key];

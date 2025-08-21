@@ -57,6 +57,14 @@
 	<LordKuper.Common.PawnHealthState.Mental.Tooltip>Pawns in a state of mental breakdown.</LordKuper.Common.PawnHealthState.Mental.Tooltip>
 	<LordKuper.Common.PawnHealthState.Dead.Label>Dead</LordKuper.Common.PawnHealthState.Dead.Label>
 	<LordKuper.Common.PawnHealthState.Dead.Tooltip>Dead pawns.</LordKuper.Common.PawnHealthState.Dead.Tooltip>
+	<LordKuper.Common.PawnPrimaryWeaponType.None.Label>None</LordKuper.Common.PawnPrimaryWeaponType.None.Label>
+	<LordKuper.Common.PawnPrimaryWeaponType.None.Tooltip>Pawns with no primary weapon equipped.</LordKuper.Common.PawnPrimaryWeaponType.None.Tooltip>
+	<LordKuper.Common.PawnPrimaryWeaponType.Melee.Label>Melee</LordKuper.Common.PawnPrimaryWeaponType.Melee.Label>
+	<LordKuper.Common.PawnPrimaryWeaponType.Melee.Tooltip>Pawns with melee primary weapon equipped.</LordKuper.Common.PawnPrimaryWeaponType.Melee.Tooltip>
+	<LordKuper.Common.PawnPrimaryWeaponType.Ranged.Label>Ranged</LordKuper.Common.PawnPrimaryWeaponType.Ranged.Label>
+	<LordKuper.Common.PawnPrimaryWeaponType.Ranged.Tooltip>Pawns with ranged primary weapon equipped.</LordKuper.Common.PawnPrimaryWeaponType.Ranged.Tooltip>
+	<LordKuper.Common.PawnPrimaryWeaponType.Undefined.Label>Other</LordKuper.Common.PawnPrimaryWeaponType.Undefined.Label>
+	<LordKuper.Common.PawnPrimaryWeaponType.Undefined.Tooltip>Pawns with other primary weapon type equipped.</LordKuper.Common.PawnPrimaryWeaponType.Undefined.Tooltip>
 	<LordKuper.Common.Passions.LearnRateFactorDescription>Learning rate factor: {0:N2}</LordKuper.Common.Passions.LearnRateFactorDescription>
 	<LordKuper.Common.Passions.ForgetRateFactorDescription>Forgetting rate factor: {0:N2}</LordKuper.Common.Passions.ForgetRateFactorDescription>
 	<LordKuper.Common.Actions.Add>Add</LordKuper.Common.Actions.Add>
@@ -104,4 +112,8 @@
 	<LordKuper.Common.PawnFilter.FilterPawnStatsOffTooltip>Pawns' stat levels will be ignored.</LordKuper.Common.PawnFilter.FilterPawnStatsOffTooltip>
 	<LordKuper.Common.PawnFilter.PawnStatLimitsLabel>Pawn stats</LordKuper.Common.PawnFilter.PawnStatLimitsLabel>
 	<LordKuper.Common.PawnFilter.PawnStatLimitsTooltip>Only pawns whose stat levels are in the ranges listed below will be selected. Stats not listed in this section will be ignored.</LordKuper.Common.PawnFilter.PawnStatLimitsTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnPrimaryWeaponTypesOnTooltip>Pawns will be filtered by their primary weapons.</LordKuper.Common.PawnFilter.FilterPawnPrimaryWeaponTypesOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnPrimaryWeaponTypesOffTooltip>Pawns' weapons will be ignored.</LordKuper.Common.PawnFilter.FilterPawnPrimaryWeaponTypesOffTooltip>
+	<LordKuper.Common.PawnFilter.AllowedPawnPrimaryWeaponTypesLabel>Pawn weapons</LordKuper.Common.PawnFilter.AllowedPawnPrimaryWeaponTypesLabel>
+	<LordKuper.Common.PawnFilter.AllowedPawnPrimaryWeaponTypesTooltip>Only pawns whose primary weapons are of types enabled below will be selected.</LordKuper.Common.PawnFilter.AllowedPawnPrimaryWeaponTypesTooltip>
 </LanguageData>

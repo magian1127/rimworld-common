@@ -38,8 +38,8 @@ internal static class ToolStats
     public static IEnumerable<StatDef> StatDefs { get; } = StatDefNames.Select(defName => new StatDef
     {
         defName = defName,
-        label = Resources.Strings.Stats.GetStatLabel(defName),
-        description = Resources.Strings.Stats.GetStatDescription(defName),
+        label = Resources.Strings.Stats.GetLabel(defName),
+        description = Resources.Strings.Stats.GetDescription(defName),
         category = CategoryDef
     });
 

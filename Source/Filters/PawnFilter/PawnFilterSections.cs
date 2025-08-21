@@ -57,8 +57,13 @@ public enum PawnFilterSections
     PawnCapacities = 1 << 7,
 
     /// <summary>
+    ///     Filter by pawn primary weapon types.
+    /// </summary>
+    PawnPrimaryWeaponTypes = 1 << 8,
+
+    /// <summary>
     ///     All filter sections.
     /// </summary>
     All = PawnTypes | PawnHealthStates | PawnSkills | WorkPassions | WorkCapacities | PawnTraits | PawnStats |
-          PawnCapacities
+          PawnCapacities | PawnPrimaryWeaponTypes
 }

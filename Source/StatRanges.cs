@@ -26,7 +26,7 @@ internal static class StatRanges
     internal static float NormalizeStatValue([NotNull] StatDef stat, float value)
     {
         UpdateStatRange(stat, value);
-        return StatHelper.NormalizeValue(value, Ranges[stat]);
+        return MathHelper.NormalizeValue(value, Ranges[stat]);
     }
 
     /// <summary>

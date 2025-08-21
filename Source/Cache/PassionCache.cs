@@ -42,7 +42,8 @@ public class PassionCache(Passion passion, string defName, string label, float l
     /// <summary>
     ///     Gets the forget rate factor associated with the passion.
     /// </summary>
-    internal float ForgetRateFactor { get; } = forgetRateFactor;
+    [UsedImplicitly]
+    public float ForgetRateFactor { get; } = forgetRateFactor;
 
     /// <summary>
     ///     Gets the icon representing the passion. The icon is cached after the first retrieval.
@@ -59,10 +60,12 @@ public class PassionCache(Passion passion, string defName, string label, float l
     /// <summary>
     ///     Gets the learning rate factor associated with the passion.
     /// </summary>
-    internal float LearnRateFactor { get; } = learnRateFactor;
+    [UsedImplicitly]
+    public float LearnRateFactor { get; } = learnRateFactor;
 
     /// <summary>
     ///     Gets the passion type.
     /// </summary>
-    internal Passion Passion { get; } = passion;
+    [UsedImplicitly]
+    public Passion Passion { get; } = passion;
 }

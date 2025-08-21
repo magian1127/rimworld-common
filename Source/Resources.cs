@@ -107,6 +107,8 @@ public static class Resources
             private static string _filterPawnCapacitiesTriStateTooltip;
             private static string _filterPawnHealthStatesTooltip;
             private static string _filterPawnHealthStatesTriStateTooltip;
+            private static string _filterPawnPrimaryWeaponTypesTooltip;
+            private static string _filterPawnPrimaryWeaponTypesTriStateTooltip;
             private static string _filterPawnSkillsTooltip;
             private static string _filterPawnSkillsTriStateTooltip;
             private static string _filterPawnStatsTooltip;
@@ -131,6 +133,18 @@ public static class Resources
             /// </summary>
             public static readonly string AllowedPawnHealthStatesTooltip =
                 $"{CommonMod.ModId}.{nameof(PawnFilter)}.{nameof(AllowedPawnHealthStatesTooltip)}".Translate();
+
+            /// <summary>
+            ///     Gets the localized label for allowed pawn primary weapon types.
+            /// </summary>
+            public static readonly string AllowedPawnPrimaryWeaponTypesLabel =
+                $"{CommonMod.ModId}.{nameof(PawnFilter)}.{nameof(AllowedPawnPrimaryWeaponTypesLabel)}".Translate();
+
+            /// <summary>
+            ///     Gets the localized tooltip for allowed pawn primary weapon types.
+            /// </summary>
+            public static readonly string AllowedPawnPrimaryWeaponTypesTooltip =
+                $"{CommonMod.ModId}.{nameof(PawnFilter)}.{nameof(AllowedPawnPrimaryWeaponTypesTooltip)}".Translate();
 
             /// <summary>
             ///     Gets the localized label for allowed pawn types.
@@ -179,6 +193,18 @@ public static class Resources
             /// </summary>
             public static readonly string FilterPawnHealthStatesOnTooltip =
                 $"{CommonMod.ModId}.{nameof(PawnFilter)}.{nameof(FilterPawnHealthStatesOnTooltip)}".Translate();
+
+            /// <summary>
+            ///     Gets the localized tooltip for the "Off" state of pawn primary weapon types filter.
+            /// </summary>
+            public static readonly string FilterPawnPrimaryWeaponTypesOffTooltip =
+                $"{CommonMod.ModId}.{nameof(PawnFilter)}.{nameof(FilterPawnPrimaryWeaponTypesOffTooltip)}".Translate();
+
+            /// <summary>
+            ///     Gets the localized tooltip for the "On" state of pawn primary weapon types filter.
+            /// </summary>
+            public static readonly string FilterPawnPrimaryWeaponTypesOnTooltip =
+                $"{CommonMod.ModId}.{nameof(PawnFilter)}.{nameof(FilterPawnPrimaryWeaponTypesOnTooltip)}".Translate();
 
             /// <summary>
             ///     Gets the localized tooltip for the "Off" state of pawn skills filter.
@@ -378,6 +404,37 @@ public static class Resources
             }
 
             /// <summary>
+            ///     Generates a tooltip describing the filter states for pawn primary weapon types.
+            /// </summary>
+            /// <param name="triState">
+            ///     A value indicating whether the tooltip should include a tri-state description. If
+            ///     <see
+            ///         langword="true" />
+            ///     , the tooltip includes an additional "undefined" state. If <see langword="false" />, the
+            ///     tooltip describes only the "on" and "off" states.
+            /// </param>
+            /// <returns>
+            ///     A string containing the tooltip text for the filter states. The tooltip includes descriptions for the
+            ///     "on" and "off" states, and optionally the "undefined" state if <paramref name="triState" /> is
+            ///     <see
+            ///         langword="true" />
+            ///     .
+            /// </returns>
+            [NotNull]
+            public static string GetFilterPawnPrimaryWeaponTypesTooltip(bool triState)
+            {
+                if (!triState)
+                    return _filterPawnPrimaryWeaponTypesTooltip ??= string.Concat(MultiCheckboxStates.On, ": ",
+                        FilterPawnPrimaryWeaponTypesOnTooltip, Environment.NewLine, MultiCheckboxStates.Off, ": ",
+                        FilterPawnPrimaryWeaponTypesOffTooltip);
+                if (_filterPawnPrimaryWeaponTypesTriStateTooltip != null)
+                    return _filterPawnPrimaryWeaponTypesTriStateTooltip;
+                var baseTooltip = GetFilterPawnPrimaryWeaponTypesTooltip(false);
+                _filterPawnPrimaryWeaponTypesTriStateTooltip = AppendUndefinedFilterTooltip(baseTooltip);
+                return _filterPawnPrimaryWeaponTypesTriStateTooltip;
+            }
+
+            /// <summary>
             ///     Gets the tooltip for pawn skills filter, optionally including the tri-state description.
             /// </summary>
             /// <param name="triState">If true, includes the partial state description.</param>
@@ -515,7 +572,7 @@ public static class Resources
             /// </summary>
             /// <param name="healthState">The pawn health state for which to get the label.</param>
             /// <returns>The localized label string for the specified health state.</returns>
-            public static string GetPawnHealthStateLabel(Filters.PawnHealthState healthState)
+            public static string GetLabel(Filters.PawnHealthState healthState)
             {
                 return Labels.GetOrAdd(healthState,
                     hs => $"{CommonMod.ModId}.{nameof(PawnHealthState)}.{hs}.Label".Translate());
@@ -526,10 +583,50 @@ public static class Resources
             /// </summary>
             /// <param name="healthState">The health state of the pawn for which the tooltip is being retrieved.</param>
             /// <returns>A localized string representing the tooltip for the given health state.</returns>
-            public static string GetPawnHealthStateTooltip(Filters.PawnHealthState healthState)
+            public static string GetTooltip(Filters.PawnHealthState healthState)
             {
                 return Tooltips.GetOrAdd(healthState,
                     hs => $"{CommonMod.ModId}.{nameof(PawnHealthState)}.{hs}.Tooltip".Translate());
+            }
+        }
+
+        /// <summary>
+        ///     Provides string resources and label/tooltip caching for pawn primary weapon types.
+        /// </summary>
+        internal static class PawnPrimaryWeaponType
+        {
+            /// <summary>
+            ///     Caches localized labels for each <see cref="Filters.PawnPrimaryWeaponType" /> value.
+            /// </summary>
+            private static readonly ConcurrentDictionary<Filters.PawnPrimaryWeaponType, string> Labels = new();
+
+            /// <summary>
+            ///     Caches localized tooltips for each <see cref="Filters.PawnPrimaryWeaponType" /> value.
+            /// </summary>
+            private static readonly ConcurrentDictionary<Filters.PawnPrimaryWeaponType, string> Tooltips = new();
+
+            /// <summary>
+            ///     Gets the localized label for the specified <see cref="Filters.PawnPrimaryWeaponType" /> value.
+            ///     The result is cached for future calls.
+            /// </summary>
+            /// <param name="weaponType">The primary weapon type for which to get the label.</param>
+            /// <returns>The localized label string for the specified weapon type.</returns>
+            public static string GetLabel(Filters.PawnPrimaryWeaponType weaponType)
+            {
+                return Labels.GetOrAdd(weaponType,
+                    wt => $"{CommonMod.ModId}.{nameof(PawnPrimaryWeaponType)}.{wt}.Label".Translate());
+            }
+
+            /// <summary>
+            ///     Gets the localized tooltip for the specified <see cref="Filters.PawnPrimaryWeaponType" /> value.
+            ///     The result is cached for future calls.
+            /// </summary>
+            /// <param name="weaponType">The primary weapon type for which to get the tooltip.</param>
+            /// <returns>The localized tooltip string for the specified weapon type.</returns>
+            public static string GetTooltip(Filters.PawnPrimaryWeaponType weaponType)
+            {
+                return Tooltips.GetOrAdd(weaponType,
+                    wt => $"{CommonMod.ModId}.{nameof(PawnPrimaryWeaponType)}.{wt}.Tooltip".Translate());
             }
         }
 
@@ -549,7 +646,7 @@ public static class Resources
             /// </summary>
             /// <param name="pawnType">The pawn type for which to get the label.</param>
             /// <returns>The localized label string for the specified pawn type.</returns>
-            public static string GetPawnTypeLabel(Filters.PawnType pawnType)
+            public static string GetLabel(Filters.PawnType pawnType)
             {
                 return Labels.GetOrAdd(pawnType, pt => $"{CommonMod.ModId}.{nameof(PawnType)}.{pt}.Label".Translate());
             }
@@ -566,7 +663,7 @@ public static class Resources
             /// <param name="defName">The definition name of the stat.</param>
             /// <returns>The localized description string for the stat.</returns>
             [NotNull]
-            public static string GetStatDescription(string defName)
+            public static string GetDescription(string defName)
             {
                 return $"{CommonMod.ModId}.{nameof(Stats)}.{defName}.Description".Translate();
             }
@@ -577,7 +674,7 @@ public static class Resources
             /// <param name="defName">The definition name of the stat.</param>
             /// <returns>The localized label string for the stat.</returns>
             [NotNull]
-            public static string GetStatLabel(string defName)
+            public static string GetLabel(string defName)
             {
                 return $"{CommonMod.ModId}.{nameof(Stats)}.{defName}.Label".Translate();
             }

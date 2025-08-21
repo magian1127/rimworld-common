@@ -57,6 +57,14 @@
 	<LordKuper.Common.PawnHealthState.Mental.Tooltip>Пешки в состоянии психического срыва.</LordKuper.Common.PawnHealthState.Mental.Tooltip>
 	<LordKuper.Common.PawnHealthState.Dead.Label>Мёртв</LordKuper.Common.PawnHealthState.Dead.Label>
 	<LordKuper.Common.PawnHealthState.Dead.Tooltip>Мёртвые пешки.</LordKuper.Common.PawnHealthState.Dead.Tooltip>
+	<LordKuper.Common.PawnPrimaryWeaponType.None.Label>Нет</LordKuper.Common.PawnPrimaryWeaponType.None.Label>
+	<LordKuper.Common.PawnPrimaryWeaponType.None.Tooltip>Пешки без экипированного основного оружия.</LordKuper.Common.PawnPrimaryWeaponType.None.Tooltip>
+	<LordKuper.Common.PawnPrimaryWeaponType.Melee.Label>Ближний бой</LordKuper.Common.PawnPrimaryWeaponType.Melee.Label>
+	<LordKuper.Common.PawnPrimaryWeaponType.Melee.Tooltip>Пешки с экипированным основным оружием ближнего боя.</LordKuper.Common.PawnPrimaryWeaponType.Melee.Tooltip>
+	<LordKuper.Common.PawnPrimaryWeaponType.Ranged.Label>Дальний бой</LordKuper.Common.PawnPrimaryWeaponType.Ranged.Label>
+	<LordKuper.Common.PawnPrimaryWeaponType.Ranged.Tooltip>Пешки с экипированным основным дальнобойным оружием.</LordKuper.Common.PawnPrimaryWeaponType.Ranged.Tooltip>
+	<LordKuper.Common.PawnPrimaryWeaponType.Undefined.Label>Другое</LordKuper.Common.PawnPrimaryWeaponType.Undefined.Label>
+	<LordKuper.Common.PawnPrimaryWeaponType.Undefined.Tooltip>Пешки с другим типом основного оружия.</LordKuper.Common.PawnPrimaryWeaponType.Undefined.Tooltip>
 	<LordKuper.Common.Passions.LearnRateFactorDescription>Коэффициент обучения: {0:N2}</LordKuper.Common.Passions.LearnRateFactorDescription>
 	<LordKuper.Common.Passions.ForgetRateFactorDescription>Коэффициент забывания: {0:N2}</LordKuper.Common.Passions.ForgetRateFactorDescription>
 	<LordKuper.Common.Actions.Add>Добавить</LordKuper.Common.Actions.Add>
@@ -104,4 +112,8 @@
 	<LordKuper.Common.PawnFilter.FilterPawnStatsOffTooltip>Уровни характеристик пешек будут игнорироваться.</LordKuper.Common.PawnFilter.FilterPawnStatsOffTooltip>
 	<LordKuper.Common.PawnFilter.PawnStatLimitsLabel>Характеристики пешек</LordKuper.Common.PawnFilter.PawnStatLimitsLabel>
 	<LordKuper.Common.PawnFilter.PawnStatLimitsTooltip>Будут выбраны только те пешки, уровни характеристик которых находятся в указанных ниже диапазонах. Характеристики, не перечисленные в этом разделе, будут игнорироваться.</LordKuper.Common.PawnFilter.PawnStatLimitsTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnPrimaryWeaponTypesOnTooltip>Пешки будут фильтроваться по их основному оружию.</LordKuper.Common.PawnFilter.FilterPawnPrimaryWeaponTypesOnTooltip>
+	<LordKuper.Common.PawnFilter.FilterPawnPrimaryWeaponTypesOffTooltip>Основное оружие пешек будет игнорироваться.</LordKuper.Common.PawnFilter.FilterPawnPrimaryWeaponTypesOffTooltip>
+	<LordKuper.Common.PawnFilter.AllowedPawnPrimaryWeaponTypesLabel>Основное оружие пешек</LordKuper.Common.PawnFilter.AllowedPawnPrimaryWeaponTypesLabel>
+	<LordKuper.Common.PawnFilter.AllowedPawnPrimaryWeaponTypesTooltip>Будут выбраны только те пешки, чьё основное оружие относится к типам, включённым в этом разделе.</LordKuper.Common.PawnFilter.AllowedPawnPrimaryWeaponTypesTooltip>
 </LanguageData>

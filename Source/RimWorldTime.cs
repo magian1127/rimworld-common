@@ -255,4 +255,16 @@ public readonly struct RimWorldTime : IEquatable<RimWorldTime>, IComparable<RimW
     {
         return new RimWorldTime(a.TotalHours + b);
     }
+
+    /// <summary>
+    ///     Returns a string representation of the time span in years, days, and hours.
+    /// </summary>
+    /// <returns>
+    ///     A string formatted as "{Year}y {Day}d {Hour}h", where the year is displayed with four decimal places, the day as
+    ///     an integer, and the hour with one decimal place.
+    /// </returns>
+    public override string ToString()
+    {
+        return $"{Year:N0}y {Day:N0}d {Hour:F.1}h";
+    }
 }
