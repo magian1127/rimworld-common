@@ -98,6 +98,41 @@ public static class Buttons
     ///     Renders a toggleable icon button within the specified rectangle and updates the toggle state.
     /// </summary>
     /// <remarks>
+    ///     This method uses the provided <paramref name="getter" /> to determine the current toggle state
+    ///     and the  <paramref name="setter" /> to update the state after the button is interacted with. The button displays
+    ///     different icons and tooltips depending on whether the toggle is enabled or disabled.
+    /// </remarks>
+    /// <param name="rect">The screen space rectangle where the button will be drawn.</param>
+    /// <param name="getter">A function that retrieves the current toggle state. Must not be <see langword="null" />.</param>
+    /// <param name="setter">An action that sets the updated toggle state. Must not be <see langword="null" />.</param>
+    /// <param name="enabledTooltip">The tooltip text to display when the toggle is enabled.</param>
+    /// <param name="enabledIcon">The icon to display when the toggle is enabled. Must not be <see langword="null" />.</param>
+    /// <param name="disabledTooltip">The tooltip text to display when the toggle is disabled.</param>
+    /// <param name="disabledIcon">The icon to display when the toggle is disabled. Must not be <see langword="null" />.</param>
+    /// <exception cref="ArgumentNullException">
+    ///     Thrown if <paramref name="getter" />, <paramref name="setter" />, <paramref name="enabledIcon" />, or
+    ///     <paramref
+    ///         name="disabledIcon" />
+    ///     is <see langword="null" />.
+    /// </exception>
+    [UsedImplicitly]
+    public static void DoIconButtonToggle(Rect rect, [NotNull] Func<bool> getter, [NotNull] Action<bool> setter,
+        string enabledTooltip, [NotNull] Texture2D enabledIcon, string disabledTooltip,
+        [NotNull] Texture2D disabledIcon)
+    {
+        if (getter == null) throw new ArgumentNullException(nameof(getter));
+        if (setter == null) throw new ArgumentNullException(nameof(setter));
+        if (enabledIcon == null) throw new ArgumentNullException(nameof(enabledIcon));
+        if (disabledIcon == null) throw new ArgumentNullException(nameof(disabledIcon));
+        var value = getter();
+        DoIconButtonToggle(rect, ref value, enabledTooltip, enabledIcon, disabledTooltip, disabledIcon);
+        setter(value);
+    }
+
+    /// <summary>
+    ///     Renders a toggleable icon button within the specified rectangle and updates the toggle state.
+    /// </summary>
+    /// <remarks>
     ///     The button toggles between two states: enabled and disabled. The appearance and tooltip of
     ///     the button are determined by the current state. Clicking the button switches the state and updates the
     ///     <paramref
@@ -116,9 +151,11 @@ public static class Buttons
     /// <param name="disabledTooltip">The tooltip text to display when the button is in the disabled state.</param>
     /// <param name="disabledIcon">The icon to display when the button is in the disabled state.</param>
     [UsedImplicitly]
-    public static void DoIconButtonToggle(Rect rect, ref bool value, string enabledTooltip, Texture2D enabledIcon,
-        string disabledTooltip, Texture2D disabledIcon)
+    public static void DoIconButtonToggle(Rect rect, ref bool value, [CanBeNull] string enabledTooltip,
+        [NotNull] Texture2D enabledIcon, [CanBeNull] string disabledTooltip, [NotNull] Texture2D disabledIcon)
     {
+        if (enabledIcon == null) throw new ArgumentNullException(nameof(enabledIcon));
+        if (disabledIcon == null) throw new ArgumentNullException(nameof(disabledIcon));
         var newValue = value;
         var iconButton = value
             ? new IconButton(enabledIcon, () => newValue = false, enabledTooltip)
