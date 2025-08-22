@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using LordKuper.Common.Filters;
 using LordKuper.Common.Filters.Limits;
@@ -7,7 +8,6 @@ using LordKuper.Common.Helpers;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using Enumerable = System.Linq.Enumerable;
 using PawnHealthState = LordKuper.Common.Filters.PawnHealthState;
 using Strings = LordKuper.Common.Resources.Strings.PawnFilter;
 
@@ -26,27 +26,25 @@ public static class PawnFilterWidget
     /// <summary>
     ///     List of all possible pawn health states.
     /// </summary>
-    private static readonly List<PawnHealthState> AllPawnHealthStates =
-        Enumerable.ToList(Enumerable.Cast<PawnHealthState>(Enum.GetValues(typeof(PawnHealthState))));
+    private static readonly List<PawnHealthState> AllPawnHealthStates = Enum.GetValues(typeof(PawnHealthState))
+        .Cast<PawnHealthState>().Where(s => s != PawnHealthState.None).ToList();
 
     /// <summary>
     ///     List of all possible pawn primary weapon types.
     /// </summary>
     private static readonly List<PawnPrimaryWeaponType> AllPawnPrimaryWeaponTypes =
-        Enumerable.ToList(Enumerable.Cast<PawnPrimaryWeaponType>(Enum.GetValues(typeof(PawnPrimaryWeaponType))));
+        Enum.GetValues(typeof(PawnPrimaryWeaponType)).Cast<PawnPrimaryWeaponType>().ToList();
 
     /// <summary>
     ///     List of all possible pawn types.
     /// </summary>
-    private static readonly List<PawnType> AllPawnTypes =
-        Enumerable.ToList(Enumerable.Cast<PawnType>(Enum.GetValues(typeof(PawnType))));
+    private static readonly List<PawnType> AllPawnTypes = Enum.GetValues(typeof(PawnType)).Cast<PawnType>().ToList();
 
     /// <summary>
     ///     List of all possible work capacities, excluding None and AllWork.
     /// </summary>
-    private static readonly List<WorkTags> AllWorkCapacities = Enumerable.ToList(
-        Enumerable.Where(Enumerable.Cast<WorkTags>(Enum.GetValues(typeof(WorkTags))),
-            t => t != WorkTags.None && t != WorkTags.AllWork));
+    private static readonly List<WorkTags> AllWorkCapacities = Enum.GetValues(typeof(WorkTags)).Cast<WorkTags>()
+        .Where(t => t != WorkTags.None && t != WorkTags.AllWork).ToList();
 
     /// <summary>
     ///     Renders the Pawn Capacities section within the specified rectangular area and updates the associated filter
@@ -912,7 +910,7 @@ public static class PawnFilterWidget
                 Layout.ElementGapSmall, canAdd ? count + 1 : count, out var gridHeight, out remRect);
             y += gridHeight;
             var i = 0;
-            var keys = Enumerable.ToArray(pawnFilter.WorkCapacityLimits.Keys);
+            var keys = pawnFilter.WorkCapacityLimits.Keys.ToArray();
             foreach (var key in keys)
             {
                 var value = pawnFilter.WorkCapacityLimits[key];
