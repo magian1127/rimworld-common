@@ -21,9 +21,9 @@ public static class Buttons
     private const float ActionButtonWidthMin = Layout.GridSize * 50;
 
     /// <summary>
-    ///     The default size (in pixels) for field icon buttons.
+    ///     The default size (in pixels) for icon buttons.
     /// </summary>
-    internal const float FieldIconButtonSize = Layout.GridSize * 6;
+    [UsedImplicitly] public const float IconButtonSize = Layout.GridSize * 6;
 
     /// <summary>
     ///     Draws a standard action button with a label and invokes the specified action when clicked.
@@ -92,5 +92,38 @@ public static class Buttons
             Verse.Widgets.DrawTextureFitted(rect, iconButton.Icon, 1f, 0.25f);
         }
         if (!string.IsNullOrEmpty(iconButton.Tooltip)) TooltipHandler.TipRegion(rect, iconButton.Tooltip);
+    }
+
+    /// <summary>
+    ///     Renders a toggleable icon button within the specified rectangle and updates the toggle state.
+    /// </summary>
+    /// <remarks>
+    ///     The button toggles between two states: enabled and disabled. The appearance and tooltip of
+    ///     the button are determined by the current state. Clicking the button switches the state and updates the
+    ///     <paramref
+    ///         name="value" />
+    ///     .
+    /// </remarks>
+    /// <param name="rect">The screen space rectangle where the button will be drawn.</param>
+    /// <param name="value">
+    ///     A reference to the current toggle state. Set to <see langword="true" /> for the enabled state or
+    ///     <see
+    ///         langword="false" />
+    ///     for the disabled state. This value will be updated based on user interaction.
+    /// </param>
+    /// <param name="enabledTooltip">The tooltip text to display when the button is in the enabled state.</param>
+    /// <param name="enabledIcon">The icon to display when the button is in the enabled state.</param>
+    /// <param name="disabledTooltip">The tooltip text to display when the button is in the disabled state.</param>
+    /// <param name="disabledIcon">The icon to display when the button is in the disabled state.</param>
+    [UsedImplicitly]
+    public static void DoIconButtonToggle(Rect rect, ref bool value, string enabledTooltip, Texture2D enabledIcon,
+        string disabledTooltip, Texture2D disabledIcon)
+    {
+        var newValue = value;
+        var iconButton = value
+            ? new IconButton(enabledIcon, () => newValue = false, enabledTooltip)
+            : new IconButton(disabledIcon, () => newValue = true, disabledTooltip);
+        DoIconButton(rect, iconButton);
+        value = newValue;
     }
 }

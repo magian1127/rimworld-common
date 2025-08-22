@@ -27,10 +27,10 @@ public static partial class Fields
             return;
         }
         var buttonsRect = Layout.GetLeftColumnRect(rect,
-            (Buttons.FieldIconButtonSize + Layout.ElementGapSmall) * actionButtons.Count, out remRect);
+            (Buttons.IconButtonSize + Layout.ElementGapSmall) * actionButtons.Count, out remRect);
         foreach (var actionButton in actionButtons)
         {
-            var buttonRect = Layout.GetLeftColumnRect(buttonsRect, Buttons.FieldIconButtonSize, out buttonsRect);
+            var buttonRect = Layout.GetLeftColumnRect(buttonsRect, Buttons.IconButtonSize, out buttonsRect);
             Buttons.DoIconButton(buttonRect, actionButton);
             Layout.GetLeftColumnRect(buttonsRect, Layout.ElementGapSmall, out buttonsRect);
         }
