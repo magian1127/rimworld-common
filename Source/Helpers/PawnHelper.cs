@@ -24,14 +24,19 @@ public static class PawnHelper
     /// <returns>The <see cref="PawnHealthState" /> of the pawn.</returns>
     internal static PawnHealthState GetPawnHealthState([NotNull] Pawn pawn)
     {
-        if (pawn.Dead) return PawnHealthState.Dead;
-        if (pawn.Downed) return PawnHealthState.Downed;
-        if (pawn.InMentalState) return PawnHealthState.Mental;
+        if (pawn.Dead)
+            return PawnHealthState.Dead;
+        var state = PawnHealthState.None;
+        if (pawn.Downed)
+            state |= PawnHealthState.Downed;
+        if (pawn.InMentalState)
+            state |= PawnHealthState.Mental;
         var health = pawn.health;
         if (health.HasHediffsNeedingTend() || health.hediffSet.HasTendableHediff())
-            return PawnHealthState.NeedsTending;
-        if (HealthAIUtility.ShouldSeekMedicalRest(pawn)) return PawnHealthState.Resting;
-        return PawnHealthState.Healthy;
+            state |= PawnHealthState.NeedsTending;
+        if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
+            state |= PawnHealthState.Resting;
+        return state == PawnHealthState.None ? PawnHealthState.Healthy : state;
     }
 
     /// <summary>

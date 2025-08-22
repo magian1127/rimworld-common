@@ -495,7 +495,7 @@ public class PawnFilter : IExposable
         if (FilterPawnHealthStates == true)
         {
             var healthState = PawnHelper.GetPawnHealthState(pawn);
-            if (!AllowedPawnHealthStates.Contains(healthState)) return false;
+            if (!AllowedPawnHealthStates.Any(s => healthState.HasFlag(s))) return false;
         }
         if (FilterPawnPrimaryWeaponTypes == true)
         {
