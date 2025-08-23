@@ -22,7 +22,8 @@ public static class PawnHelper
     /// </summary>
     /// <param name="pawn">The pawn whose health state is to be determined.</param>
     /// <returns>The <see cref="PawnHealthState" /> of the pawn.</returns>
-    internal static PawnHealthState GetPawnHealthState([NotNull] Pawn pawn)
+    [UsedImplicitly]
+    public static PawnHealthState GetPawnHealthState([NotNull] Pawn pawn)
     {
         if (pawn.Dead)
             return PawnHealthState.Dead;
@@ -44,7 +45,8 @@ public static class PawnHelper
     /// </summary>
     /// <param name="pawn">The pawn whose type is to be determined.</param>
     /// <returns>The <see cref="PawnType" /> of the pawn.</returns>
-    internal static PawnType GetPawnType([NotNull] Pawn pawn)
+    [UsedImplicitly]
+    public static PawnType GetPawnType([NotNull] Pawn pawn)
     {
         if (pawn.IsFreeNonSlaveColonist) return PawnType.Colonist;
         if (pawn.IsSlaveOfColony) return PawnType.Slave;
@@ -71,7 +73,8 @@ public static class PawnHelper
     ///     if the weapon type cannot be determined.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="pawn" /> is <see langword="null" />.</exception>
-    internal static PawnPrimaryWeaponType GetPrimaryWeaponType([NotNull] Pawn pawn)
+    [UsedImplicitly]
+    public static PawnPrimaryWeaponType GetPrimaryWeaponType([NotNull] Pawn pawn)
     {
         if (pawn == null) throw new ArgumentNullException(nameof(pawn));
         var weapon = pawn.equipment?.Primary;

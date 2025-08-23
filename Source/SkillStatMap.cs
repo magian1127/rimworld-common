@@ -76,7 +76,9 @@ internal static class SkillStatMap
         }
 #if DEBUG
         foreach (var kvp in _map)
+        {
             Logger.LogMessage($"{kvp.Key.defName}: {string.Join(", ", kvp.Value)}");
+        }
 #endif
     }
 }

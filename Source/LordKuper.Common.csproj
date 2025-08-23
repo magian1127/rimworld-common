@@ -82,6 +82,7 @@
     <Compile Include="Filters\Limits\PawnCapacityLimit.cs" />
     <Compile Include="Filters\PawnFilter\PawnFilterSections.cs" />
     <Compile Include="Filters\PawnFilter\PawnPrimaryWeaponType.cs" />
+    <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\MathHelper.cs" />
     <Compile Include="Helpers\PawnHelper.cs" />
     <Compile Include="Helpers\StatDefCategoryComparer.cs" />

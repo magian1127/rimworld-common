@@ -26,25 +26,25 @@ public static class PawnFilterWidget
     /// <summary>
     ///     List of all possible pawn health states.
     /// </summary>
-    private static readonly List<PawnHealthState> AllPawnHealthStates = Enum.GetValues(typeof(PawnHealthState))
-        .Cast<PawnHealthState>().Where(s => s != PawnHealthState.None).ToList();
+    private static readonly List<PawnHealthState> AllPawnHealthStates =
+        [.. Enum.GetValues(typeof(PawnHealthState)).Cast<PawnHealthState>().Where(s => s != PawnHealthState.None)];
 
     /// <summary>
     ///     List of all possible pawn primary weapon types.
     /// </summary>
     private static readonly List<PawnPrimaryWeaponType> AllPawnPrimaryWeaponTypes =
-        Enum.GetValues(typeof(PawnPrimaryWeaponType)).Cast<PawnPrimaryWeaponType>().ToList();
+        [.. Enum.GetValues(typeof(PawnPrimaryWeaponType)).Cast<PawnPrimaryWeaponType>()];
 
     /// <summary>
     ///     List of all possible pawn types.
     /// </summary>
-    private static readonly List<PawnType> AllPawnTypes = Enum.GetValues(typeof(PawnType)).Cast<PawnType>().ToList();
+    private static readonly List<PawnType> AllPawnTypes = [.. Enum.GetValues(typeof(PawnType)).Cast<PawnType>()];
 
     /// <summary>
     ///     List of all possible work capacities, excluding None and AllWork.
     /// </summary>
-    private static readonly List<WorkTags> AllWorkCapacities = Enum.GetValues(typeof(WorkTags)).Cast<WorkTags>()
-        .Where(t => t != WorkTags.None && t != WorkTags.AllWork).ToList();
+    private static readonly List<WorkTags> AllWorkCapacities =
+        [.. Enum.GetValues(typeof(WorkTags)).Cast<WorkTags>().Where(t => t != WorkTags.None && t != WorkTags.AllWork)];
 
     /// <summary>
     ///     Renders the Pawn Capacities section within the specified rectangular area and updates the associated filter
@@ -325,11 +325,9 @@ public static class PawnFilterWidget
         var relevantHealthStates = new HashSet<PawnHealthState>();
         foreach (var hs in AllPawnHealthStates)
         {
-            if (!pawnFilter.ForbiddenPawnHealthStates.Contains(hs))
-            {
-                relevantHealthStates.Add(hs);
-                count++;
-            }
+            if (pawnFilter.ForbiddenPawnHealthStates.HasFlag(hs)) continue;
+            relevantHealthStates.Add(hs);
+            count++;
         }
         if (count != 0)
         {
@@ -342,14 +340,15 @@ public static class PawnFilterWidget
                 var selectorRect = rects[i++];
                 var label = Resources.Strings.PawnHealthState.GetLabel(healthState);
                 var tooltip = Resources.Strings.PawnHealthState.GetTooltip(healthState);
-                var value = pawnFilter.AllowedPawnHealthStates.Contains(healthState);
+                var value = pawnFilter.AllowedPawnHealthStates.HasFlag(healthState);
                 var oldValue = value;
                 Fields.DoLabeledCheckbox(selectorRect, 0, null, ref value, label, tooltip, null, out _);
+                if (oldValue == value) continue;
+                filterChanged = true;
                 if (value)
-                    pawnFilter.AllowedPawnHealthStates.Add(healthState);
+                    pawnFilter.AllowedPawnHealthStates |= healthState;
                 else
-                    pawnFilter.AllowedPawnHealthStates.Remove(healthState);
-                if (oldValue != value) filterChanged = true;
+                    pawnFilter.AllowedPawnHealthStates &= ~healthState;
             }
         }
         return y;

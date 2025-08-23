@@ -15,10 +15,7 @@ namespace LordKuper.Common.Filters;
 /// </summary>
 public class PawnFilter : IExposable
 {
-    /// <summary>
-    ///     The set of allowed pawn health states for filtering.
-    /// </summary>
-    public HashSet<PawnHealthState> AllowedPawnHealthStates = [];
+    public PawnHealthState AllowedPawnHealthStates = PawnHealthState.None;
 
     /// <summary>
     ///     Defines the set of allowed primary weapon types for pawns.
@@ -80,10 +77,7 @@ public class PawnFilter : IExposable
     /// </summary>
     public bool? FilterWorkPassions;
 
-    /// <summary>
-    ///     The set of forbidden pawn health states for filtering.
-    /// </summary>
-    public HashSet<PawnHealthState> ForbiddenPawnHealthStates = [];
+    public PawnHealthState ForbiddenPawnHealthStates = PawnHealthState.None;
 
     /// <summary>
     ///     The set of forbidden pawn types for filtering.
@@ -135,8 +129,8 @@ public class PawnFilter : IExposable
         Scribe_Collections.Look(ref AllowedPawnTypes, nameof(AllowedPawnTypes), LookMode.Value);
         Scribe_Collections.Look(ref ForbiddenPawnTypes, nameof(ForbiddenPawnTypes), LookMode.Value);
         Scribe_Values.Look(ref FilterPawnHealthStates, nameof(FilterPawnHealthStates));
-        Scribe_Collections.Look(ref AllowedPawnHealthStates, nameof(AllowedPawnHealthStates), LookMode.Value);
-        Scribe_Collections.Look(ref ForbiddenPawnHealthStates, nameof(ForbiddenPawnHealthStates), LookMode.Value);
+        Scribe_Values.Look(ref AllowedPawnHealthStates, nameof(AllowedPawnHealthStates));
+        Scribe_Values.Look(ref ForbiddenPawnHealthStates, nameof(ForbiddenPawnHealthStates));
         Scribe_Values.Look(ref FilterWorkPassions, nameof(FilterWorkPassions));
         Scribe_Collections.Look(ref AllowedWorkPassions, nameof(AllowedWorkPassions), LookMode.Value);
         Scribe_Values.Look(ref FilterPawnTraits, nameof(FilterPawnTraits));
@@ -149,6 +143,9 @@ public class PawnFilter : IExposable
         Scribe_Collections.Look(ref PawnSkillLimits, nameof(PawnSkillLimits), LookMode.Deep);
         Scribe_Values.Look(ref FilterPawnStats, nameof(FilterPawnStats));
         Scribe_Collections.Look(ref PawnStatLimits, nameof(PawnStatLimits), LookMode.Deep);
+        Scribe_Values.Look(ref FilterPawnPrimaryWeaponTypes, nameof(FilterPawnPrimaryWeaponTypes));
+        Scribe_Collections.Look(ref AllowedPawnPrimaryWeaponTypes, nameof(AllowedPawnPrimaryWeaponTypes),
+            LookMode.Value);
     }
 
     /// <summary>
@@ -179,56 +176,56 @@ public class PawnFilter : IExposable
         if (main.FilterPawnTypes.HasValue)
         {
             combined.FilterPawnTypes = main.FilterPawnTypes;
-            combined.AllowedPawnTypes = new HashSet<PawnType>(main.AllowedPawnTypes);
-            combined.ForbiddenPawnTypes = new HashSet<PawnType>(main.ForbiddenPawnTypes);
+            combined.AllowedPawnTypes = [.. main.AllowedPawnTypes];
+            combined.ForbiddenPawnTypes = [.. main.ForbiddenPawnTypes];
         }
         else
         {
             combined.FilterPawnTypes = fallback.FilterPawnTypes;
-            combined.AllowedPawnTypes = new HashSet<PawnType>(fallback.AllowedPawnTypes);
-            combined.ForbiddenPawnTypes = new HashSet<PawnType>(fallback.ForbiddenPawnTypes);
+            combined.AllowedPawnTypes = [.. fallback.AllowedPawnTypes];
+            combined.ForbiddenPawnTypes = [.. fallback.ForbiddenPawnTypes];
         }
         if (main.FilterPawnHealthStates.HasValue)
         {
             combined.FilterPawnHealthStates = main.FilterPawnHealthStates;
-            combined.AllowedPawnHealthStates = new HashSet<PawnHealthState>(main.AllowedPawnHealthStates);
-            combined.ForbiddenPawnHealthStates = new HashSet<PawnHealthState>(main.ForbiddenPawnHealthStates);
+            combined.AllowedPawnHealthStates = main.AllowedPawnHealthStates;
+            combined.ForbiddenPawnHealthStates = main.ForbiddenPawnHealthStates;
         }
         else
         {
             combined.FilterPawnHealthStates = fallback.FilterPawnHealthStates;
-            combined.AllowedPawnHealthStates = new HashSet<PawnHealthState>(fallback.AllowedPawnHealthStates);
-            combined.ForbiddenPawnHealthStates = new HashSet<PawnHealthState>(fallback.ForbiddenPawnHealthStates);
+            combined.AllowedPawnHealthStates = fallback.AllowedPawnHealthStates;
+            combined.ForbiddenPawnHealthStates = fallback.ForbiddenPawnHealthStates;
         }
         if (main.FilterWorkPassions.HasValue)
         {
             combined.FilterWorkPassions = main.FilterWorkPassions;
-            combined.AllowedWorkPassions = new HashSet<Passion>(main.AllowedWorkPassions);
+            combined.AllowedWorkPassions = [.. main.AllowedWorkPassions];
         }
         else
         {
             combined.FilterWorkPassions = fallback.FilterWorkPassions;
-            combined.AllowedWorkPassions = new HashSet<Passion>(fallback.AllowedWorkPassions);
+            combined.AllowedWorkPassions = [.. fallback.AllowedWorkPassions];
         }
         if (main.FilterPawnTraits.HasValue)
         {
             combined.FilterPawnTraits = main.FilterPawnTraits;
-            combined.PawnTraitLimits = new List<PawnTraitLimit>(main.PawnTraitLimits);
+            combined.PawnTraitLimits = [.. main.PawnTraitLimits];
         }
         else
         {
             combined.FilterPawnTraits = fallback.FilterPawnTraits;
-            combined.PawnTraitLimits = new List<PawnTraitLimit>(fallback.PawnTraitLimits);
+            combined.PawnTraitLimits = [.. fallback.PawnTraitLimits];
         }
         if (main.FilterPawnCapacities.HasValue)
         {
             combined.FilterPawnCapacities = main.FilterPawnCapacities;
-            combined.PawnCapacityLimits = new List<PawnCapacityLimit>(main.PawnCapacityLimits);
+            combined.PawnCapacityLimits = [.. main.PawnCapacityLimits];
         }
         else
         {
             combined.FilterPawnCapacities = fallback.FilterPawnCapacities;
-            combined.PawnCapacityLimits = new List<PawnCapacityLimit>(fallback.PawnCapacityLimits);
+            combined.PawnCapacityLimits = [.. fallback.PawnCapacityLimits];
         }
         if (main.FilterWorkCapacities.HasValue)
         {
@@ -243,34 +240,32 @@ public class PawnFilter : IExposable
         if (main.FilterPawnSkills.HasValue)
         {
             combined.FilterPawnSkills = main.FilterPawnSkills;
-            combined.PawnSkillLimits = new List<PawnSkillLimit>(main.PawnSkillLimits);
+            combined.PawnSkillLimits = [.. main.PawnSkillLimits];
         }
         else
         {
             combined.FilterPawnSkills = fallback.FilterPawnSkills;
-            combined.PawnSkillLimits = new List<PawnSkillLimit>(fallback.PawnSkillLimits);
+            combined.PawnSkillLimits = [.. fallback.PawnSkillLimits];
         }
         if (main.FilterPawnStats.HasValue)
         {
             combined.FilterPawnStats = main.FilterPawnStats;
-            combined.PawnStatLimits = new List<StatLimit>(main.PawnStatLimits);
+            combined.PawnStatLimits = [.. main.PawnStatLimits];
         }
         else
         {
             combined.FilterPawnStats = fallback.FilterPawnStats;
-            combined.PawnStatLimits = new List<StatLimit>(fallback.PawnStatLimits);
+            combined.PawnStatLimits = [.. fallback.PawnStatLimits];
         }
         if (main.FilterPawnPrimaryWeaponTypes.HasValue)
         {
             combined.FilterPawnPrimaryWeaponTypes = main.FilterPawnPrimaryWeaponTypes;
-            combined.AllowedPawnPrimaryWeaponTypes =
-                new HashSet<PawnPrimaryWeaponType>(main.AllowedPawnPrimaryWeaponTypes);
+            combined.AllowedPawnPrimaryWeaponTypes = [.. main.AllowedPawnPrimaryWeaponTypes];
         }
         else
         {
             combined.FilterPawnPrimaryWeaponTypes = fallback.FilterPawnPrimaryWeaponTypes;
-            combined.AllowedPawnPrimaryWeaponTypes =
-                new HashSet<PawnPrimaryWeaponType>(fallback.AllowedPawnPrimaryWeaponTypes);
+            combined.AllowedPawnPrimaryWeaponTypes = [.. fallback.AllowedPawnPrimaryWeaponTypes];
         }
         combined.Validate();
         return combined;
@@ -290,7 +285,7 @@ public class PawnFilter : IExposable
     {
         return new PawnFilter
         {
-            AllowedPawnHealthStates = [..AllowedPawnHealthStates],
+            AllowedPawnHealthStates = AllowedPawnHealthStates,
             AllowedPawnTypes = [..AllowedPawnTypes],
             AllowedWorkPassions = [..AllowedWorkPassions],
             FilterPawnCapacities = FilterPawnCapacities,
@@ -300,19 +295,22 @@ public class PawnFilter : IExposable
             FilterPawnTraits = FilterPawnTraits,
             FilterPawnTypes = FilterPawnTypes,
             FilterWorkCapacities = FilterWorkCapacities,
-            FilterWorkPassions = FilterWorkPassions,
-            ForbiddenPawnHealthStates = [..ForbiddenPawnHealthStates],
+            FilterWorkPassions = FilterWorkPassions, ForbiddenPawnHealthStates = ForbiddenPawnHealthStates,
             ForbiddenPawnTypes = [..ForbiddenPawnTypes],
-            PawnCapacityLimits = PawnCapacityLimits.Select(l => new PawnCapacityLimit(l.Def) { Limit = l.Limit })
-                .ToList(),
-            PawnSkillLimits = PawnSkillLimits.Select(l => new PawnSkillLimit(l.Def) { Limit = l.Limit }).ToList(),
-            PawnStatLimits = PawnStatLimits.Select(l => new StatLimit(l.Def)
-            {
-                Limit = l.Limit, LimitMaxCap = l.LimitMaxCap, LimitMinCap = l.LimitMinCap, ValueStyle = l.ValueStyle
-            }).ToList(),
-            PawnTraitLimits = PawnTraitLimits.Select(l => new PawnTraitLimit(l.Def) { Limit = l.Limit }).ToList(),
+            PawnCapacityLimits = [.. PawnCapacityLimits.Select(l => new PawnCapacityLimit(l.Def) { Limit = l.Limit })],
+            PawnSkillLimits = [.. PawnSkillLimits.Select(l => new PawnSkillLimit(l.Def) { Limit = l.Limit })],
+            PawnStatLimits =
+            [
+                .. PawnStatLimits.Select(l => new StatLimit(l.Def)
+                {
+                    Limit = l.Limit, LimitMaxCap = l.LimitMaxCap, LimitMinCap = l.LimitMinCap, ValueStyle = l.ValueStyle
+                })
+            ],
+            PawnTraitLimits = [.. PawnTraitLimits.Select(l => new PawnTraitLimit(l.Def) { Limit = l.Limit })],
             TriStateMode = TriStateMode,
-            WorkCapacityLimits = new Dictionary<WorkTags, bool>(WorkCapacityLimits)
+            WorkCapacityLimits = new Dictionary<WorkTags, bool>(WorkCapacityLimits),
+            FilterPawnPrimaryWeaponTypes = FilterPawnPrimaryWeaponTypes,
+            AllowedPawnPrimaryWeaponTypes = [..AllowedPawnPrimaryWeaponTypes]
         };
     }
 
@@ -378,7 +376,9 @@ public class PawnFilter : IExposable
                 $"{Resources.Strings.PawnFilter.AllowedPawnHealthStatesLabel}: "
                     .Colorize(ColoredText.ExpectationsColor), indentationLevel);
             stringBuilder.AppendLine(FilterPawnHealthStates.Value
-                ? string.Join(", ", AllowedPawnHealthStates.Select(Resources.Strings.PawnHealthState.GetLabel))
+                ? string.Join(", ",
+                    EnumHelper.GetUniqueFlags(AllowedPawnHealthStates, ForbiddenPawnHealthStates)
+                        .Select(Resources.Strings.PawnHealthState.GetLabel))
                 : Resources.Strings.PawnFilter.IgnoreFilter);
         }
         if (FilterPawnPrimaryWeaponTypes.HasValue)
@@ -495,17 +495,37 @@ public class PawnFilter : IExposable
         if (FilterPawnHealthStates == true)
         {
             var healthState = PawnHelper.GetPawnHealthState(pawn);
-            if (!AllowedPawnHealthStates.Any(s => healthState.HasFlag(s))) return false;
+            if (EnumHelper.HasAnyFlag(healthState, ForbiddenPawnHealthStates) ||
+                !EnumHelper.HasAnyFlag(healthState, AllowedPawnHealthStates))
+            {
+#if DEBUG
+                Logger.LogMessage(
+                    $"{pawn.LabelShort} doesn't satisfy filter. Reason = Pawn Health State ({healthState}).");
+#endif
+                return false;
+            }
         }
         if (FilterPawnPrimaryWeaponTypes == true)
         {
             var weaponType = PawnHelper.GetPrimaryWeaponType(pawn);
-            if (!AllowedPawnPrimaryWeaponTypes.Contains(weaponType)) return false;
+            if (!AllowedPawnPrimaryWeaponTypes.Contains(weaponType))
+            {
+#if DEBUG
+                Logger.LogMessage($"{pawn.LabelShort} doesn't satisfy filter. Reason = Primary Weapon ({weaponType}).");
+#endif
+                return false;
+            }
         }
         if (FilterWorkPassions == true && workType != null)
         {
             var passion = PawnHelper.GetWorkPassion(pawn, workType);
-            if (!AllowedWorkPassions.Contains(passion)) return false;
+            if (!AllowedWorkPassions.Contains(passion))
+            {
+#if DEBUG
+                Logger.LogMessage($"{pawn.LabelShort} doesn't satisfy filter. Reason = Work Passion ({passion}).");
+#endif
+                return false;
+            }
         }
         if (FilterPawnTraits == true && PawnTraitLimits.Count > 0)
         {
@@ -534,7 +554,13 @@ public class PawnFilter : IExposable
                     }
                 }
             }
-            if (!enabledSatisfied || !disabledSatisfied) return false;
+            if (!enabledSatisfied || !disabledSatisfied)
+            {
+#if DEBUG
+                Logger.LogMessage($"{pawn.LabelShort} doesn't satisfy filter. Reason = Pawn Traits.");
+#endif
+                return false;
+            }
         }
         if (FilterPawnCapacities == true && PawnCapacityLimits.Count > 0)
         {
@@ -548,7 +574,13 @@ public class PawnFilter : IExposable
                     break;
                 }
             }
-            if (!satisfied) return false;
+            if (!satisfied)
+            {
+#if DEBUG
+                Logger.LogMessage($"{pawn.LabelShort} doesn't satisfy filter. Reason = Pawn Capacities.");
+#endif
+                return false;
+            }
         }
         if (FilterWorkCapacities == true && WorkCapacityLimits.Count > 0)
         {
@@ -561,7 +593,13 @@ public class PawnFilter : IExposable
                     break;
                 }
             }
-            if (!satisfied) return false;
+            if (!satisfied)
+            {
+#if DEBUG
+                Logger.LogMessage($"{pawn.LabelShort} doesn't satisfy filter. Reason = Work Capacities.");
+#endif
+                return false;
+            }
         }
         if (FilterPawnSkills == true && PawnSkillLimits.Count > 0)
         {
@@ -576,7 +614,13 @@ public class PawnFilter : IExposable
                     break;
                 }
             }
-            if (!satisfied) return false;
+            if (!satisfied)
+            {
+#if DEBUG
+                Logger.LogMessage($"{pawn.LabelShort} doesn't satisfy filter. Reason = Pawn Skills.");
+#endif
+                return false;
+            }
         }
         if (FilterPawnStats == true && PawnStatLimits.Count > 0)
         {
@@ -591,7 +635,13 @@ public class PawnFilter : IExposable
                     break;
                 }
             }
-            if (!satisfied) return false;
+            if (!satisfied)
+            {
+#if DEBUG
+                Logger.LogMessage($"{pawn.LabelShort} doesn't satisfy filter. Reason = Pawn Stats.");
+#endif
+                return false;
+            }
         }
         return true;
     }
@@ -605,7 +655,8 @@ public class PawnFilter : IExposable
     ///     <see cref="TriStateMode" /> is not enabled. It is intended to maintain consistent  state for filter-related
     ///     settings.
     /// </remarks>
-    private void Validate()
+    [UsedImplicitly]
+    public void Validate()
     {
         if (!TriStateMode)
         {
